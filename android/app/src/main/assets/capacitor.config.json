@@ -1,0 +1,6 @@
+{
+	"appId": "com.ode.ionic.memories",
+	"appName": "Memories",
+	"webDir": "build",
+	"bundledWebRuntime": false
+}
