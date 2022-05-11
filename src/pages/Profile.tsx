@@ -1,9 +1,9 @@
 import { isPlatform } from '@ionic/core';
 import { Redirect, Route } from 'react-router-dom';
-import { IonButton, IonRouterOutlet, IonCard, IonList, IonItem, IonAvatar, IonCardTitle, IonCardHeader, IonLabel, IonRow, IonCol, IonGrid, IonContent, IonButtons, IonFab, IonFabButton, IonHeader, IonIcon, IonPage, IonTitle, IonToolbar, IonBackButton, IonSearchbar, IonChip, IonItemDivider, IonCardContent } from '@ionic/react';
-import { giftOutline, location, notificationsOutline, chevronDownOutline, lockClosedOutline, createOutline, addOutline } from 'ionicons/icons';
+import { IonButton, IonRouterOutlet, IonCard, IonList, IonItem, IonAvatar, IonCardTitle, IonCardHeader, IonLabel, IonRow, IonCol, IonGrid, IonContent, IonButtons, IonFab, IonFabButton, IonHeader, IonIcon, IonPage, IonTitle, IonToolbar, IonBackButton, IonSearchbar, IonChip, IonItemDivider, IonCardContent, IonModal, IonInput } from '@ionic/react';
+import { giftOutline, location, notificationsOutline, chevronDownOutline, lockClosedOutline, createOutline, addOutline, listOutline, informationOutline, helpOutline, informationCircleOutline, helpCircleOutline, documentTextOutline } from 'ionicons/icons';
 import {GoogleMap, InfoWindow, LoadScript, Marker} from '@react-google-maps/api';
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useState, useRef } from 'react';
 import LaundryContext from '../data/laundry-context';
 import avatar1 from '../images/avatar1.svg';
 import './Profile.css'
@@ -11,6 +11,9 @@ import './Profile.css'
 const Profile: React.FC = () => {
   const laundryCtx = useContext(LaundryContext);
   const [locName, setlocname] = useState<string>("default");
+  const [isEditing, setIsEditing] = useState(false);
+  const nameRef = useRef<HTMLIonInputElement>(null);
+  const [username, setUsername] = useState<string>("Boba Fett");
 
   return (
     <IonPage>
@@ -19,6 +22,17 @@ const Profile: React.FC = () => {
           <IonTitle>My Profile</IonTitle>
         </IonToolbar>
       </IonHeader>
+
+      <IonModal isOpen={isEditing}>
+        <IonContent>
+          <IonItem>
+            <IonLabel>Name</IonLabel>
+            <IonInput type='text' ref={nameRef} value={username}></IonInput>
+          </IonItem>
+        </IonContent>
+      </IonModal>
+
+
       <IonContent>
 
         <IonGrid>
@@ -73,19 +87,19 @@ const Profile: React.FC = () => {
                 <IonLabel>Change Password</IonLabel>
               </IonItem>
               <IonItem>
-                <IonIcon icon={lockClosedOutline}></IonIcon>
+                <IonIcon icon={documentTextOutline}></IonIcon>
                 <IonLabel>Privacy Policy</IonLabel>
               </IonItem>
               <IonItem>
-                <IonIcon icon={lockClosedOutline}></IonIcon>
+                <IonIcon icon={listOutline}></IonIcon>
                 <IonLabel>Terms and Conditions</IonLabel>
               </IonItem>
               <IonItem>
-                <IonIcon icon={lockClosedOutline}></IonIcon>
+                <IonIcon icon={informationCircleOutline}></IonIcon>
                 <IonLabel>About</IonLabel>
               </IonItem>
               <IonItem>
-                <IonIcon icon={lockClosedOutline}></IonIcon>
+                <IonIcon icon={helpCircleOutline}></IonIcon>
                 <IonLabel>Help</IonLabel>
               </IonItem>
             </IonList>
