@@ -29,8 +29,8 @@ const Home: React.FC = () => {
   const [locName, setlocname] = useState<string>("default");
 
   //map functionality
-  const [selectedLat, setLat] = useState<number>(1);
-  const [selectedLng, setLng] = useState<number>(1);
+  const [selectedLat, setLat] = useState<number>(0);
+  const [selectedLng, setLng] = useState<number>(0);
 
 
   const getCurrentPosition = async () => {
@@ -40,12 +40,13 @@ const Home: React.FC = () => {
     console.log('Lng:', coordinates.coords.longitude);
     setLat(coordinates.coords.latitude);
     setLng(coordinates.coords.longitude);
+    console.log('SelectedLat:', selectedLat);
+    laundryCtx.chooseLocation(selectedLat, selectedLng);
   };
 
   useEffect(()=>{
     getCurrentPosition();
-    laundryCtx.chooseLocation(selectedLat, selectedLng);
-  }, []);
+  });
 
   return (
     <IonPage>

@@ -7,6 +7,7 @@ import laundry1 from '../images/laundry1.jpg'
 import LaundryContext, {Location, Outlet} from './laundry-context';
 import { debug } from 'console';
 import Outlets from '../pages/Outlets';
+import { getDistance } from 'geolib';
 
 const LaundryContextProvider: React.FC = props => {
 
@@ -16,21 +17,39 @@ const LaundryContextProvider: React.FC = props => {
         { imageSrc: laundry1,
         name:'LaundryIn Jakarta',
         location:'Jakarta',
-        llat: 2,
-        llng: 2,
+        llat: -6.200000,
+        llng: 106.816666,
         id: 'o1',
         courier: 'yes',
-        rating: 75
+        rating: 75,
+        distance: getDistance(
+            { latitude: location.latitude, longitude: location.longitude },
+            { latitude: -6.200000 , longitude: 106.816666 })
         },
         { imageSrc: laundry1,
             name:'LaundryIn Bandung',
             location:'Bandung',
-            llat: 2,
-            llng: 2,
+            llat: -6.914744,
+            llng: 107.613144,
             id: 'o2',
             courier: 'no',
-            rating: 75
-            }
+            rating: 75,
+            distance: getDistance(
+                { latitude: location.latitude, longitude: location.longitude },
+                { latitude: -6.914744 , longitude: 107.613144 })
+            },
+            { imageSrc: laundry1,
+                name:'LaundryIn Jakarta 2',
+                location:'Jakarta',
+                llat: -6.200000,
+                llng: 106.816666,
+                id: 'o3',
+                courier: 'yes',
+                rating: 75,
+                distance: getDistance(
+                    { latitude: location.latitude, longitude: location.longitude },
+                    { latitude: -6.200000 , longitude: 106.816666 })
+                }
     ]);
 
 
@@ -45,29 +64,9 @@ const LaundryContextProvider: React.FC = props => {
         return currLocation;
     }
 
-    const defaultOutlets = () => {
-
-        // setOutlets((currOutlets: Outlet[]) => {
-        //     return currOutlets;
-        // });
-
-        setOutlets(outlets);
-        
-    }
-
-    const courierOutlets = () => {
-
-        // setOutlets((currOutlets: Outlet[]) => {
-        //     currOutlets.filter(outlet => outlet.courier === 'yes');
-        //     return currOutlets;
-        // });
-        setOutlets(outlets.filter(outlet => outlet.courier === 'yes'));
-        return outlets;
-    }
-
 
 return(
-    <LaundryContext.Provider value={{location, outlets, chooseLocation, defaultOutlets, courierOutlets}}>
+    <LaundryContext.Provider value={{location, outlets, chooseLocation}}>
         {props.children}
     </LaundryContext.Provider>
 );

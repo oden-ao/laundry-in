@@ -16,26 +16,54 @@ const Outlets: React.FC = () => {
   const google = window.google;
   
   const laundryCtx = useContext(LaundryContext);
-  const [locName, setlocname] = useState<string>("default");
-  const [distance, setDistance] = useState<number>();
+  const [locName, setlocname] = useState<string>("tertiary");
+  
   const [filterCourier, setfilterCourier] = useState(false);
+  const [courierChip, setCourierChip] = useState<string>("");
+  const [currOutlets, setOutlets] = useState(laundryCtx.outlets);
+
+  const [sortNearby, setNearby] = useState(false);
+  const [nearbyChip, setNearbyChip] = useState<string>("");
 
   const courierReady = laundryCtx.outlets.filter(outlet => outlet.courier === 'yes');
+  const nearby = laundryCtx.outlets.sort((a,b) => a.distance - b.distance)
 
   const filterCourierHandler = () =>{
     
     if(filterCourier===false){
-      laundryCtx.courierOutlets();
+      setOutlets(courierReady);
       setfilterCourier(!filterCourier);
+      setCourierChip("primary");
       console.log(filterCourier)
-      console.log(laundryCtx.outlets);
+      console.log(currOutlets);
     }
     if(filterCourier===true){
-      laundryCtx.defaultOutlets();
+      setOutlets(laundryCtx.outlets);
       setfilterCourier(!filterCourier);
+      setCourierChip("");
       console.log(filterCourier)
-      console.log(laundryCtx.outlets);
+      console.log(currOutlets);
     }
+  }
+
+  const sortNearbyHandler = () =>{
+    
+    if(sortNearby===false){
+      setOutlets(nearby);
+      setNearby(!sortNearby);
+      setNearbyChip("primary");
+    }
+    if(sortNearby===true){
+      setOutlets(laundryCtx.outlets);
+      setNearby(!sortNearby);
+      setNearbyChip("");
+    }
+  }
+
+  const calcDistance = (outletlat: number, outletlng: number) =>{
+    getDistance(
+      { latitude: laundryCtx.location.latitude, longitude: laundryCtx.location.longitude },
+      { latitude: outletlat , longitude: outletlng })
   }
 
   // var geocoder = new google.maps.Geocoder();
@@ -116,8 +144,12 @@ const Outlets: React.FC = () => {
           </IonRow>
           <IonRow>
             <IonCol>
-              <IonChip onClick={filterCourierHandler}>
+              <IonChip onClick={filterCourierHandler} color={courierChip}>
                 <IonLabel>Courier
+                </IonLabel>
+              </IonChip>
+              <IonChip onClick={sortNearbyHandler} color={nearbyChip}>
+                <IonLabel>Nearby
                 </IonLabel>
               </IonChip>
             </IonCol>
@@ -127,7 +159,7 @@ const Outlets: React.FC = () => {
           </IonRow>
         </IonGrid>
        <IonList>
-       {laundryCtx.outlets.map(outlet => (
+       {currOutlets.map(outlet => (
           <IonItem key={outlet.id}>
             <IonGrid>
               <IonRow>
@@ -137,22 +169,15 @@ const Outlets: React.FC = () => {
                   <IonCol>
                   <IonLabel>
                    <h2><b>{outlet.name}</b></h2><br/>
-                   { getDistance(
-      { latitude: laundryCtx.location.latitude, longitude: laundryCtx.location.longitude },
-      { latitude: outlet.llat , longitude: outlet.llng })>1000?
+                   {outlet.distance>1000?
       convertDistance( getDistance(
         { latitude: laundryCtx.location.latitude, longitude: laundryCtx.location.longitude },
-        { latitude: outlet.llat , longitude: outlet.llng }, 100), 'km'):
-        getDistance(
-          { latitude: laundryCtx.location.latitude, longitude: laundryCtx.location.longitude },
-          { latitude: outlet.llat , longitude: outlet.llng }) } 
+        { latitude: outlet.llat , longitude: outlet.llng }, 1000), 'km'):
+        outlet.distance } 
           
-          { getDistance(
-      { latitude: laundryCtx.location.latitude, longitude: laundryCtx.location.longitude },
-      { latitude: outlet.llat , longitude: outlet.llng })>=1000?
+          { outlet.distance>=1000?
       " km":" m"} | {outlet.location}<br/>
                   {outlet.courier==="yes"?<IonLabel>Courier Ready <IonIcon icon={courier}></IonIcon></IonLabel>:<IonLabel/>}
-                  
                   </IonLabel>
                   
                   <Rating

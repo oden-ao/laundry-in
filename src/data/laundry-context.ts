@@ -8,7 +8,8 @@ export interface Outlet {
     llng: number;
     id: string;
     courier: string;
-    rating: number
+    rating: number;
+    distance: number;
 }
 
 export interface Location {
@@ -20,14 +21,10 @@ const LaundryContext = React.createContext<{
     outlets: Outlet[];
     location: Location;
     chooseLocation: (latitude: number, longitude: number) => void;
-    defaultOutlets: () => void;
-    courierOutlets: () => void;
 }>({
     outlets: [],
     location: {latitude: 0, longitude: 0},
-    chooseLocation: () => {},
-    defaultOutlets: () => {},
-    courierOutlets: () => {}
+    chooseLocation: () => {}
 });
 
 export default LaundryContext;
