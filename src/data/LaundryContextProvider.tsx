@@ -4,7 +4,7 @@ import {Storage} from '@capacitor/storage'
 import laundry1 from '../images/laundry1.jpg'
 
 
-import LaundryContext, {Location, Outlet} from './laundry-context';
+import LaundryContext, {Location, Order, Outlet} from './laundry-context';
 import { debug } from 'console';
 import Outlets from '../pages/Outlets';
 import { getDistance } from 'geolib';
@@ -24,7 +24,10 @@ const LaundryContextProvider: React.FC = props => {
         rating: 75,
         distance: getDistance(
             { latitude: location.latitude, longitude: location.longitude },
-            { latitude: -6.200000 , longitude: 106.816666 })
+            { latitude: -6.200000 , longitude: 106.816666 }),
+        fee: getDistance(
+            { latitude: location.latitude, longitude: location.longitude },
+            { latitude: -6.200000 , longitude: 106.816666 })>30000?10000: 5000
         },
         { imageSrc: laundry1,
             name:'LaundryIn Bandung',
@@ -36,7 +39,10 @@ const LaundryContextProvider: React.FC = props => {
             rating: 75,
             distance: getDistance(
                 { latitude: location.latitude, longitude: location.longitude },
-                { latitude: -6.914744 , longitude: 107.613144 })
+                { latitude: -6.914744 , longitude: 107.613144 }),
+            fee: getDistance(
+                    { latitude: location.latitude, longitude: location.longitude },
+                    { latitude: -6.914744 , longitude: 107.613144 })>30000?10000: 5000
             },
             { imageSrc: laundry1,
                 name:'LaundryIn Jakarta 2',
@@ -48,8 +54,14 @@ const LaundryContextProvider: React.FC = props => {
                 rating: 75,
                 distance: getDistance(
                     { latitude: location.latitude, longitude: location.longitude },
-                    { latitude: -6.200000 , longitude: 106.816666 })
+                    { latitude: -6.200000 , longitude: 106.816666 }),
+                    fee: getDistance(
+                        { latitude: location.latitude, longitude: location.longitude },
+                        { latitude: -6.200000 , longitude: 106.816666 })>30000?10000: 5000
                 }
+    ]);
+
+    const [orders, setOrders] = useState<Order[]>([
     ]);
 
 
@@ -64,9 +76,22 @@ const LaundryContextProvider: React.FC = props => {
         return currLocation;
     }
 
+    const addOrder = (num: number, price:number, delivery:number, total: number) => {
+        const newOrder: Order = {
+            num: num,
+            price: price,
+            delivery: delivery,
+            total: total
+        };
+        
+        setOrders((currOrder:Order[]) => {
+            return currOrder.concat(newOrder);
+        });
+    }
+
 
 return(
-    <LaundryContext.Provider value={{location, outlets, chooseLocation}}>
+    <LaundryContext.Provider value={{location, outlets, orders, chooseLocation, addOrder}}>
         {props.children}
     </LaundryContext.Provider>
 );

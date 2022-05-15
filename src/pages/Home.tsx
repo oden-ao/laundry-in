@@ -46,7 +46,7 @@ const Home: React.FC = () => {
 
   useEffect(()=>{
     getCurrentPosition();
-  });
+  },[selectedLat, selectedLng]);
 
   return (
     <IonPage>
