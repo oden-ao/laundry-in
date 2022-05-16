@@ -1,6 +1,7 @@
 import { Redirect, Route } from 'react-router-dom';
 import { IonApp, IonRouterOutlet, setupIonicReact } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
+import { Switch } from 'react-router';
 import Outlets from './pages/Outlets';
 
 /* Core CSS required for Ionic components to work properly */
@@ -27,6 +28,7 @@ import Home from './pages/Home';
 import ByUnit from './pages/ByUnit';
 import NavigationBar from './pages/NavigationBar';
 // import LaundryContext from './data/laundry-context';
+import LaundryContextProvider from './data/LaundryContextProvider';
 
 setupIonicReact();
 
@@ -35,14 +37,17 @@ const App: React.FC = () => {
 return(
   <IonApp>
     <IonReactRouter>
+    <LaundryContextProvider>
       <IonRouterOutlet>
-      <Route path="/navi" component={NavigationBar}/>
-      <Route path="navi/home" component={NavigationBar}/>
+    <Route path="/navi" component={NavigationBar}/>
     <Route path="/outlets" component={Outlets}/>
     <Route path="/location" component={ChooseLoc}/>
-    <Route path="/unit" component={ByUnit}/>
+    <Route path="/unit"  component={ByUnit}/>
     <Redirect exact from="/" to ="/navi/home" />
+    
+      <Route path="navi/home" component={NavigationBar}/>
       </IonRouterOutlet>
+      </LaundryContextProvider>
     </IonReactRouter>
    
   </IonApp>

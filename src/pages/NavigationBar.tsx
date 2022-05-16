@@ -1,6 +1,7 @@
 import { IonButton, IonTabs, IonIcon, IonTabBar, IonTabButton, IonLabel, IonCard, IonCardContent, IonContent, IonHeader, IonPage, IonRouterOutlet, IonTitle, IonToolbar } from '@ionic/react';
 import { Redirect, Route } from 'react-router-dom';
 import { IonReactRouter } from '@ionic/react-router';
+import { Switch } from 'react-router';
 import {homeOutline, listOutline, personOutline, pricetagOutline} from 'ionicons/icons';
 import Home from './Home';
 import Orders from './Orders';

@@ -28,6 +28,7 @@
     "@types/react-dom": "^16.9.10",
     "@types/react-router": "^5.1.11",
     "@types/react-router-dom": "^5.1.7",
+    "date-fns": "^2.28.0",
     "geocoder": "^0.2.3",
     "geolib": "^3.3.3",
     "ionicons": "^5.4.0",

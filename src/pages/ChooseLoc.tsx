@@ -35,7 +35,7 @@ const ChooseLoc: React.FC = () => {
 
   useEffect(()=>{
     getCurrentPosition();
-  })
+  }, [])
 
   const selectPos = (e: google.maps.MapMouseEvent) => {
     if(e.latLng?.lat()){setLat(e.latLng?.lat());}
@@ -47,7 +47,7 @@ const ChooseLoc: React.FC = () => {
   const chooseLocHandler = async () => {
 
     laundryCtx.chooseLocation(selectedLat, selectedLng);
-    setToastMessage('Lokasi terpilih');
+    setToastMessage('Location selected');
     history.length > 0 ? history.goBack(): history.replace('/outlets');
     console.log({laundryCtx});
     //check again if the path above is right

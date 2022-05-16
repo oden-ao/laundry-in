@@ -76,9 +76,11 @@ const LaundryContextProvider: React.FC = props => {
         return currLocation;
     }
 
-    const addOrder = (num: number, price:number, delivery:number, total: number) => {
+    const addOrder = (num: number, date: string, deliverydate: string, price:number, delivery:number, total: number) => {
         const newOrder: Order = {
             num: num,
+            date: date,
+            deliverydate: deliverydate,
             price: price,
             delivery: delivery,
             total: total

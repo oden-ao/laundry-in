@@ -11,9 +11,7 @@ defineCustomElements(window);
 
 ReactDOM.render(
   <React.StrictMode>
-    <LaundryContextProvider>
     <App />
-    </LaundryContextProvider>
   </React.StrictMode>,
   document.getElementById('root')
 );

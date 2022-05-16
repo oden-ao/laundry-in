@@ -9,3 +9,11 @@
     white-space: nowrap;
     text-align: center;
  }
+
+ .transparent{
+    --background: rgba(1,1,1, 0.5);
+ }
+
+ .date{
+   margin: auto;
+ }
