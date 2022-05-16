@@ -103,7 +103,7 @@ const Home: React.FC = () => {
 
           <IonRow>
             <IonCol>
-              <IonLabel>By Type</IonLabel>
+              <IonLabel><b>By Type</b></IonLabel>
             </IonCol>
           </IonRow>
           <IonRow className='ion-text-center'>
@@ -135,7 +135,7 @@ const Home: React.FC = () => {
 
           <IonRow>
             <IonCol>
-              <IonLabel>Browse Outlets</IonLabel>
+              <IonLabel><b>Browse Outlets</b></IonLabel>
             </IonCol>
           </IonRow>
           <IonRow className='ion-text-center'>
@@ -167,7 +167,7 @@ const Home: React.FC = () => {
 
           <IonRow>
             <IonCol>
-              <IonLabel>Special Promo</IonLabel>
+              <IonLabel><b>Special Promo</b></IonLabel>
             </IonCol>
           </IonRow>
           <IonRow className='ion-text-center'>

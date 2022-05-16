@@ -180,7 +180,7 @@ const Outlets: React.FC = () => {
                   {outlet.courier==="yes"?<IonLabel>Courier Ready <IonIcon icon={courier}></IonIcon></IonLabel>:<IonLabel/>}
                   </IonLabel>
                   
-                  <Rating
+                  <Rating readonly={true}
                  ratingValue={outlet.rating}/>
                 </IonCol>
               </IonRow>

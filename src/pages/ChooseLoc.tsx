@@ -1,5 +1,5 @@
 import { IonBackButton, IonToast, IonFab, IonItem, IonGrid, IonButton, IonIcon, IonButtons, IonRow, IonCol, IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonLabel, IonInput, IonSelect, IonSelectOption, IonFabButton, IonActionSheet } from '@ionic/react';
-import {cameraOutline} from 'ionicons/icons';
+import {arrowBack, cameraOutline} from 'ionicons/icons';
 import { useState, useRef, useContext, useEffect } from 'react';
 import {Camera, CameraResultType, CameraSource} from '@capacitor/camera';
 import {Directory, Filesystem} from "@capacitor/filesystem";
@@ -62,8 +62,8 @@ const ChooseLoc: React.FC = () => {
                     duration={1500}
                     onDidDismiss={() => {setToastMessage('')}}/>
       <IonFab vertical="top" horizontal="start" slot="fixed">
-      <IonFabButton>
-            <IonBackButton defaultHref='/navi/home'></IonBackButton>
+      <IonFabButton routerLink='/navi/home'>
+            <IonIcon icon={arrowBack}></IonIcon>
           </IonFabButton>
       </IonFab>
       

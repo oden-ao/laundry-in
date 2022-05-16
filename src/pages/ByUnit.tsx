@@ -382,7 +382,7 @@ const closeOrderHandler = () => {
                   Delivery Fee: {outlet.fee} IDR
                   </IonLabel>
                   
-                  <Rating
+                  <Rating readonly={true}
                  ratingValue={outlet.rating}/>
                 </IonCol>
               </IonRow>
