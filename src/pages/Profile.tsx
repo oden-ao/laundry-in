@@ -1,7 +1,7 @@
 import { isPlatform } from '@ionic/core';
 import { Redirect, Route } from 'react-router-dom';
 import { IonButton, IonRouterOutlet, IonCard, IonList, IonItem, IonAvatar, IonCardTitle, IonCardHeader, IonLabel, IonRow, IonCol, IonGrid, IonContent, IonButtons, IonFab, IonFabButton, IonHeader, IonIcon, IonPage, IonTitle, IonToolbar, IonBackButton, IonSearchbar, IonChip, IonItemDivider, IonCardContent, IonModal, IonInput } from '@ionic/react';
-import { giftOutline, location, notificationsOutline, chevronDownOutline, lockClosedOutline, createOutline, addOutline, listOutline, informationOutline, helpOutline, informationCircleOutline, helpCircleOutline, documentTextOutline, addCircle } from 'ionicons/icons';
+import { giftOutline, location, notificationsOutline, chevronDownOutline, lockClosedOutline, createOutline, addOutline, listOutline, informationOutline, helpOutline, informationCircleOutline, helpCircleOutline, documentTextOutline, addCircle, wallet } from 'ionicons/icons';
 import {GoogleMap, InfoWindow, LoadScript, Marker} from '@react-google-maps/api';
 import { useContext, useEffect, useState, useRef } from 'react';
 import LaundryContext from '../data/laundry-context';
@@ -18,7 +18,7 @@ const Profile: React.FC = () => {
   return (
     <IonPage>
       <IonHeader>
-        <IonToolbar color='tertiary'>
+        <IonToolbar color='primary'>
           <IonTitle>My Profile</IonTitle>
         </IonToolbar>
       </IonHeader>
@@ -61,10 +61,10 @@ const Profile: React.FC = () => {
               
           </IonCard>
 
-          <IonCard color='tertiary'>
+          <IonCard color='primary'>
             <div className='coinbtn'>
             <IonButton className='btncolor' fill='clear'><IonIcon slot="icon-only" icon={addCircle}></IonIcon></IonButton>
-            <IonButton className='btncolor' fill='clear'><IonIcon slot="icon-only" icon={addOutline}></IonIcon></IonButton>
+            <IonButton className='btncolor' fill='clear'><IonIcon slot="icon-only" icon={wallet}></IonIcon></IonButton>
             </div>
             <IonCardHeader>
               Your Coins

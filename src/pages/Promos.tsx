@@ -14,7 +14,7 @@ const Promos: React.FC = () => {
   return (
     <IonPage>
       <IonHeader>
-        <IonToolbar color='tertiary'>
+        <IonToolbar color='primary'>
           <IonTitle>Promotions</IonTitle>
         </IonToolbar>
       </IonHeader>

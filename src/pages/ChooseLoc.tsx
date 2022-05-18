@@ -34,8 +34,16 @@ const ChooseLoc: React.FC = () => {
   };
 
   useEffect(()=>{
-    getCurrentPosition();
-  }, [])
+    let mounted = true;
+    if (mounted){
+      // getCurrentPosition();
+      setLat(laundryCtx.location.latitude);
+      setLng(laundryCtx.location.longitude);
+    }
+    
+    return () =>{ mounted = false;  
+    }
+  }, [laundryCtx.location.latitude, laundryCtx.location.longitude])
 
   const selectPos = (e: google.maps.MapMouseEvent) => {
     if(e.latLng?.lat()){setLat(e.latLng?.lat());}
@@ -48,7 +56,7 @@ const ChooseLoc: React.FC = () => {
 
     laundryCtx.chooseLocation(selectedLat, selectedLng);
     setToastMessage('Location selected');
-    history.length > 0 ? history.goBack(): history.replace('/outlets');
+    history.length > 0 ? history.goBack(): history.replace('/navi/home');
     console.log({laundryCtx});
     //check again if the path above is right
 
@@ -67,14 +75,14 @@ const ChooseLoc: React.FC = () => {
           </IonFabButton>
       </IonFab>
       
-      <LoadScript googleMapsApiKey="AIzaSyCuO9hSvfXdsUG6UsVqo6q3ouqqhqN7f2A">
+      
             <GoogleMap onClick={selectPos}
             mapContainerStyle={containerStyle}
-            center={{lat:selectedLat, lng:selectedLng}}
+            center={laundryCtx.location==={latitude: 0, longitude: 0}?{lat:selectedLat, lng:selectedLng}:{lat: laundryCtx.location.latitude, lng: laundryCtx.location.longitude}}
             zoom={18}><></>
-            <Marker position={{lat:selectedLat, lng:selectedLng}}/>
+            <Marker position={{lat: selectedLat, lng: selectedLng}}/>
             </GoogleMap>
-      </LoadScript>
+     
       <IonGrid>
       <IonRow>
         <IonCol >

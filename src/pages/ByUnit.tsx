@@ -1,6 +1,6 @@
 import { isPlatform } from '@ionic/core';
 import { Redirect, Route } from 'react-router-dom';
-import { IonButton, IonToast, IonLoading, IonCardContent, IonRouterOutlet, IonCard, IonList, IonItem, IonAvatar, IonCardTitle, IonCardHeader, IonLabel, IonRow, IonCol, IonGrid, IonContent, IonButtons, IonFab, IonFabButton, IonHeader, IonIcon, IonPage, IonTitle, IonToolbar, IonBackButton, IonSearchbar, IonChip, IonItemDivider, IonListHeader, IonFooter, IonModal, IonDatetime, IonBackdrop } from '@ionic/react';
+import { IonButton, IonCardSubtitle, IonToast, IonLoading, IonCardContent, IonRouterOutlet, IonCard, IonList, IonItem, IonAvatar, IonCardTitle, IonCardHeader, IonLabel, IonRow, IonCol, IonGrid, IonContent, IonButtons, IonFab, IonFabButton, IonHeader, IonIcon, IonPage, IonTitle, IonToolbar, IonBackButton, IonSearchbar, IonChip, IonItemDivider, IonListHeader, IonFooter, IonModal, IonDatetime, IonBackdrop } from '@ionic/react';
 import { locationSharp, chevronDownOutline, arrowForward, arrowBack, arrowBackCircle, removeCircle, addCircle, cartOutline, close } from 'ionicons/icons';
 import {GoogleMap, InfoWindow, LoadScript, Marker} from '@react-google-maps/api';
 import {Geolocation} from '@capacitor/geolocation';
@@ -28,6 +28,12 @@ const ByUnit: React.FC = () => {
     height:'100%',
     margin:'auto'
   };
+
+  const containerCardStyle = {
+    width:'100%',
+    height: '150px',
+    margin:'auto'
+  };
  
   const history = useHistory();
   const [toastMessage, setToastMessage] = useState('');
@@ -37,17 +43,27 @@ const ByUnit: React.FC = () => {
   const [selectedLng, setLng] = useState<number>(1);
 
 
-  const getCurrentPosition = async () => {
-    const coordinates = await Geolocation.getCurrentPosition({enableHighAccuracy:true});
-    console.log('Current position:', coordinates);
-    console.log('Lat:', coordinates.coords.latitude);
-    console.log('Lng:', coordinates.coords.longitude);
-    setLat(coordinates.coords.latitude);
-    setLng(coordinates.coords.longitude);
-  };
+  // const getCurrentPosition = async () => {
+  //   const coordinates = await Geolocation.getCurrentPosition({enableHighAccuracy:true});
+  //   console.log('Current position:', coordinates);
+  //   console.log('Lat:', coordinates.coords.latitude);
+  //   console.log('Lng:', coordinates.coords.longitude);
+  //   setLat(coordinates.coords.latitude);
+  //   setLng(coordinates.coords.longitude);
+  // };
+
+  // useEffect(()=>{
+  //   getCurrentPosition();
+  // }, [history])
 
   useEffect(()=>{
-    getCurrentPosition();
+    let mounted = true;
+    if (mounted){
+      laundryCtx.updateDistance(laundryCtx.location.latitude, laundryCtx.location.longitude);
+      // getCurrentPosition();
+    }
+    return () =>{ mounted = false;  
+    }
   }, [])
 
   const selectPos = (e: google.maps.MapMouseEvent) => {
@@ -154,7 +170,7 @@ const closeOrderHandler = () => {
 
 
   const placeOrderHandler = () =>{
-    laundryCtx.addOrder(laundryCtx.orders.length + 1, formatDate(currDate) , formatDate(selectedDate), total, chosenOutlet!.fee, total + chosenOutlet!.fee);
+    laundryCtx.addOrder(laundryCtx.orders.length + 1, "Unit", formatDate(currDate) , formatDate(selectedDate), total, chosenOutlet!.fee, total + chosenOutlet!.fee);
     setConfirmScreen(false);
     setToastMessage('Order placed');
     history.length > 0 ? history.goBack(): history.replace('/navi/home');  
@@ -173,14 +189,12 @@ const closeOrderHandler = () => {
                     onDidDismiss={() => {setToastMessage('')}}/>
 
       <IonModal isOpen={changeLoc}>
-      <LoadScript googleMapsApiKey="AIzaSyCuO9hSvfXdsUG6UsVqo6q3ouqqhqN7f2A">
             <GoogleMap onClick={selectPos}
             mapContainerStyle={containerStyle}
-            center={{lat:selectedLat, lng:selectedLng}}
+            center={laundryCtx.location==={latitude: 0, longitude: 0}?{lat:selectedLat, lng:selectedLng}:{lat: laundryCtx.location.latitude, lng: laundryCtx.location.longitude}}
             zoom={18}><></>
-            <Marker position={{lat:selectedLat, lng:selectedLng}}/>
+            <Marker position={laundryCtx.location==={latitude: 0, longitude: 0}?{lat:selectedLat, lng:selectedLng}:{lat: laundryCtx.location.latitude, lng: laundryCtx.location.longitude}}/>
             </GoogleMap>
-      </LoadScript>
       <IonGrid>
       <IonRow>
         <IonCol >
@@ -195,7 +209,7 @@ const closeOrderHandler = () => {
 
       <IonModal isOpen={confirmScreen}>
       <IonHeader>
-        <IonToolbar color='tertiary'>
+        <IonToolbar color='primary'>
           <IonButtons slot='start'>
           <IonButton fill="clear" onClick={closeOrderHandler}>
           <IonIcon icon={close} slot="icon-only"></IonIcon>
@@ -207,24 +221,23 @@ const closeOrderHandler = () => {
 
       <IonContent>
       <IonCard>
-              <IonCardContent>
-                <IonGrid>
-                  <IonRow>
-                    <IonCol size='2'>
-                    <img src={locationSharp}/>
-                    </IonCol>
-                    <IonCol>
-                    
-                    <IonLabel>
-                    Your current location <br/>
-                    {laundryCtx.location.latitude}, {laundryCtx.location.longitude}
-                    </IonLabel>
-                    </IonCol>
-                    <div className='ion-text-end'> <IonButton fill='clear' onClick={changeLocHandler}><IonIcon slot="icon-only" icon={chevronDownOutline}></IonIcon></IonButton></div>
-                  </IonRow>
-                </IonGrid>
-                </IonCardContent>
-              </IonCard>
+             
+             <IonCardHeader>
+               
+               <IonCardSubtitle>
+               <IonIcon icon={locationSharp}></IonIcon>Your Current Location</IonCardSubtitle>
+
+
+               <div className='locbtn'> <IonButton fill='clear' routerLink='/location'><IonIcon slot="icon-only" icon={chevronDownOutline}></IonIcon></IonButton></div>
+
+               </IonCardHeader>
+         <GoogleMap
+         mapContainerStyle={containerCardStyle}
+         center={laundryCtx.location==={latitude: 0, longitude: 0}?{lat:selectedLat, lng:selectedLng}:{lat: laundryCtx.location.latitude, lng: laundryCtx.location.longitude}}
+         zoom={18}><></>
+         <Marker position={laundryCtx.location==={latitude: 0, longitude: 0}?{lat:selectedLat, lng:selectedLng}:{lat: laundryCtx.location.latitude, lng: laundryCtx.location.longitude}}/>
+         </GoogleMap>
+           </IonCard>
 
               <IonCard>
                 <IonCardContent>
@@ -234,7 +247,7 @@ const closeOrderHandler = () => {
                       Shirts x {shirts}
                     </IonCol>
                     <IonCol>
-                      {shirts * 15000} IDR
+                      {(shirts * 15000).toLocaleString()} IDR
                     </IonCol>
                   </IonRow>:
                   <IonRow></IonRow>}
@@ -243,7 +256,7 @@ const closeOrderHandler = () => {
                       Pants x {pants}
                     </IonCol>
                     <IonCol>
-                      {pants * 20000} IDR
+                      {(pants * 20000).toLocaleString()} IDR
                     </IonCol>
                   </IonRow>:
                   <IonRow></IonRow>}
@@ -252,7 +265,7 @@ const closeOrderHandler = () => {
                       Blazers x {blazers}
                     </IonCol>
                     <IonCol>
-                      {blazers * 30000} IDR
+                      {(blazers * 30000).toLocaleString()} IDR
                     </IonCol>
                   </IonRow>:
                   <IonRow></IonRow>}
@@ -269,7 +282,7 @@ const closeOrderHandler = () => {
               <IonCardContent>
                 <IonCardTitle>Chosen Outlet</IonCardTitle>
                 <IonLabel>Outlet: {chosenOutlet?.name} <br/></IonLabel>
-              <IonLabel>Delivery Fee: {chosenOutlet?.fee} IDR<br/></IonLabel>
+              <IonLabel>Delivery Fee: {chosenOutlet?.fee.toLocaleString()} IDR<br/></IonLabel>
               <IonButton onClick={selectOutletHandler}>Change Outlet</IonButton>
               </IonCardContent>
               }
@@ -302,7 +315,7 @@ const closeOrderHandler = () => {
                       Price
                     </IonCol>
                     <IonCol>
-                      {total} IDR
+                      {total.toLocaleString()} IDR
                     </IonCol>
                   </IonRow>
                   {chosenOutlet == null?
@@ -314,7 +327,7 @@ const closeOrderHandler = () => {
                       Delivery Fee
                     </IonCol>
                     <IonCol>
-                      {chosenOutlet?.fee} IDR
+                      {chosenOutlet?.fee.toLocaleString()} IDR
                     </IonCol>
                   </IonRow>
                     
@@ -323,7 +336,7 @@ const closeOrderHandler = () => {
                       Total
                     </IonCol>
                     <IonCol>
-                      {total + chosenOutlet!.fee} IDR
+                      {(total + chosenOutlet!.fee).toLocaleString()} IDR
                     </IonCol>
                   </IonRow>
                   </div>
@@ -347,7 +360,7 @@ const closeOrderHandler = () => {
 
       <IonModal isOpen={selectOutlet}>
       <IonHeader>
-        <IonToolbar color='tertiary'>
+        <IonToolbar color='primary'>
           <IonButtons slot='start'>
           <IonButton fill="clear" onClick={closeOutlet}>
           <IonIcon icon={close} slot="icon-only"></IonIcon>
@@ -379,9 +392,9 @@ const closeOrderHandler = () => {
           
           { outlet.distance>=1000?
       " km":" m"} | {outlet.location}<br/>
-                  Delivery Fee: {outlet.fee} IDR
+                  Delivery Fee: {outlet.fee.toLocaleString()} IDR
                   </IonLabel>
-                  
+                  <br/>
                   <Rating readonly={true}
                  ratingValue={outlet.rating}/>
                 </IonCol>
@@ -398,7 +411,7 @@ const closeOrderHandler = () => {
       </IonModal>
 
       <IonHeader>
-        <IonToolbar color='tertiary'>
+        <IonToolbar color='primary'>
         <IonButtons slot='start'>
             <IonBackButton defaultHref='/navi/home'></IonBackButton>
           </IonButtons>
@@ -417,14 +430,14 @@ const closeOrderHandler = () => {
                 </IonListHeader>
 
                 <IonItem>
-                <IonCol>
+                <IonCol  className='ion-text-center'>
                   <img src={shirt}/>
                   </IonCol>
                   <IonCol>
                   <b>Shirts</b>
                   </IonCol>
                   <IonCol>
-                  IDR 15.000
+                  IDR 15,000
                   </IonCol>
                   <IonCol className='ion-text-center' size='1.5'>
                   <IonButton onClick={removeShirt} fill="clear" className='arrows'><IonIcon slot='icon-only' icon={removeCircle}></IonIcon></IonButton>
@@ -438,14 +451,14 @@ const closeOrderHandler = () => {
                 </IonItem>
 
                 <IonItem>
-                <IonCol>
+                <IonCol  className='ion-text-center'>
                   <img src={pantsimg}/>
                   </IonCol>
                   <IonCol>
                   <b>Pants</b>
                   </IonCol>
                   <IonCol>
-                  IDR 20.000
+                  IDR 20,000
                   </IonCol>
                   <IonCol className='ion-text-center' size='1.5'>
                   <IonButton onClick={removePants} fill="clear" className='arrows'><IonIcon slot='icon-only' icon={removeCircle}></IonIcon></IonButton>
@@ -459,14 +472,14 @@ const closeOrderHandler = () => {
                 </IonItem>
 
                 <IonItem>
-                <IonCol>
+                <IonCol  className='ion-text-center'>
                   <img src={blazer}/>
                   </IonCol>
                   <IonCol>
                   <b>Blazers</b>
                   </IonCol>
                   <IonCol>
-                  IDR 30.000
+                  IDR 30,000
                   </IonCol>
                   <IonCol className='ion-text-center' size='1.5'>
                   <IonButton onClick={removeBlazers} fill="clear" className='arrows'><IonIcon slot='icon-only' icon={removeCircle}></IonIcon></IonButton>
@@ -492,14 +505,14 @@ const closeOrderHandler = () => {
 
       <IonFooter>
         {shirts == 0 && pants == 0 && blazers == 0?
-        <IonToolbar color='tertiary'>
+        <IonToolbar color='primary'>
           <IonTitle>No items added</IonTitle>
         </IonToolbar>:
-        <IonToolbar color='tertiary'>
+        <IonToolbar color='primary'>
         <IonButtons slot='end'>
           <IonButton fill='clear' onClick={confirmOrderHandler}><IonIcon slot='icon-only' icon={arrowForward}></IonIcon></IonButton>
           </IonButtons>
-          <IonTitle>IDR {total} | {quantity} items added</IonTitle>
+          <IonTitle>IDR {total.toLocaleString()} | {quantity} items added</IonTitle>
         </IonToolbar>
         }
         

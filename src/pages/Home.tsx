@@ -1,7 +1,7 @@
 import { isPlatform } from '@ionic/core';
 import { Redirect, Route } from 'react-router-dom';
-import { IonButton, IonRouterOutlet, IonCard, IonList, IonItem, IonAvatar, IonCardTitle, IonCardHeader, IonLabel, IonRow, IonCol, IonGrid, IonContent, IonButtons, IonFab, IonFabButton, IonHeader, IonIcon, IonPage, IonTitle, IonToolbar, IonBackButton, IonSearchbar, IonChip, IonItemDivider, IonCardContent } from '@ionic/react';
-import { giftOutline, location, notificationsOutline, chevronDownOutline, locationOutline, locationSharp } from 'ionicons/icons';
+import { IonButton, IonRouterOutlet, IonCard, IonList, IonItem, IonAvatar, IonCardTitle, IonCardHeader, IonLabel, IonRow, IonCol, IonGrid, IonContent, IonButtons, IonFab, IonFabButton, IonHeader, IonIcon, IonPage, IonTitle, IonToolbar, IonBackButton, IonSearchbar, IonChip, IonItemDivider, IonCardContent, IonText, IonCardSubtitle } from '@ionic/react';
+import { giftOutline, location, notificationsOutline, chevronDownOutline, locationOutline, locationSharp, gift, notifications } from 'ionicons/icons';
 import {Geolocation} from '@capacitor/geolocation';
 import {GoogleMap, InfoWindow, LoadScript, Marker} from '@react-google-maps/api';
 
@@ -18,12 +18,18 @@ import other from '../images/SVG/other.svg'
 import all from '../images/SVG/all outlets.svg'
 import nearby from '../images/SVG/nearby.svg'
 import courier from '../images/SVG/delivery.svg'
+import header from '../images/SVG/Header.svg'
 import LaundryContext from '../data/laundry-context';
 
 import './Home.css'
 
 const Home: React.FC = () => {
   const google = window.google;
+  const containerStyle = {
+    width:'100%',
+    height: '150px',
+    margin:'auto'
+  };
   
   const laundryCtx = useContext(LaundryContext);
   const [locName, setlocname] = useState<string>("default");
@@ -50,34 +56,67 @@ const Home: React.FC = () => {
 
   return (
     <IonPage>
-      <IonHeader>
-        <IonToolbar color='tertiary'>
-          <IonTitle>LaundryIn</IonTitle>
-          <IonButtons slot='end'>
+      {/* <IonHeader translucent={true}>
+        <IonToolbar className='translucent'>    */}
+          {/* <IonTitle>LaundryIn</IonTitle> */}
+          {/* <IonButtons slot='end'>
             <IonButton slot="icon-only"><IonIcon icon={giftOutline}></IonIcon></IonButton>
             <IonButton slot="icon-only"><IonIcon icon={notificationsOutline}></IonIcon></IonButton>
-          </IonButtons>
-        </IonToolbar>
-      </IonHeader>
+          </IonButtons> */}
+        {/* </IonToolbar>
+      </IonHeader> */}
       <IonContent>
-
-        <IonGrid>
+      
+              <IonGrid className='header'>
+        
           <IonRow>
           <IonCol size-sm='8' offset-sm='2' size-md="6" offset-md="3">
+          
             <IonGrid>
+            
             <IonRow>
             <IonCol>
-              <h3>Hola! Welcome back,</h3>
-              <h1>Boba Fett</h1>
+            <div className='title'>
+            <h1>LaundryIn</h1>
+            </div>
+              <IonText className='white'>Hola! Welcome back,</IonText><br/>
+              <div className='user'>Boba Fett</div>
+            </IonCol>
+            <IonCol>
+            <div className='topbtn'>
+              <IonButton fill="clear"><IonIcon className='white' slot='icon-only' icon={gift}></IonIcon></IonButton>
+              <IonButton fill="clear"><IonIcon className='white' slot='icon-only' icon={notifications}></IonIcon></IonButton>
+      </div>
             </IonCol>
           </IonRow>
-
+          
 
           
           <IonRow>
             <IonCol>
 
               <IonCard>
+             
+                <IonCardHeader>
+                  
+                  <IonCardSubtitle>
+                  <IonIcon icon={locationSharp}></IonIcon>Your Current Location</IonCardSubtitle>
+
+
+                  <div className='locbtn'> <IonButton fill='clear' routerLink='/location'><IonIcon slot="icon-only" icon={chevronDownOutline}></IonIcon></IonButton></div>
+
+                  </IonCardHeader>
+              <LoadScript googleMapsApiKey="AIzaSyCuO9hSvfXdsUG6UsVqo6q3ouqqhqN7f2A">
+            <GoogleMap
+            mapContainerStyle={containerStyle}
+            center={laundryCtx.location==={latitude: 0, longitude: 0}?{lat:selectedLat, lng:selectedLng}:{lat: laundryCtx.location.latitude, lng: laundryCtx.location.longitude}}
+            zoom={18}><></>
+            <Marker position={laundryCtx.location==={latitude: 0, longitude: 0}?{lat:selectedLat, lng:selectedLng}:{lat: laundryCtx.location.latitude, lng: laundryCtx.location.longitude}}/>
+            </GoogleMap>
+      </LoadScript>
+              </IonCard>
+
+              {/* <IonCard>
                 <IonCardContent>
                 <IonGrid>
                   <IonRow>
@@ -96,7 +135,7 @@ const Home: React.FC = () => {
                   </IonRow>
                 </IonGrid>
                 </IonCardContent>
-              </IonCard>
+              </IonCard> */}
 
             </IonCol>
           </IonRow>

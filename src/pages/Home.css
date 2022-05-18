@@ -16,3 +16,54 @@
   height: 200px;
   max-width: 100%;
 }
+
+.header{
+  background: url(../images/SVG/Header.svg) no-repeat;
+  background-size: 100% 300px;
+  background-position: top -30px center;
+  width: auto;
+  margin: auto;
+}
+
+.translucent{
+  --background-color: transparent !important;
+  --ion-color-base: transparent !important;
+}
+
+.user{
+  font-size: x-large;
+  color: white;
+}
+
+.topbtn{
+  top: -10px;
+  right: -10px;
+  position: absolute;
+  --padding-start: 0;
+   --padding-end: 0;
+   --padding-top: 0;
+   --padding-bottom: 0;
+}
+
+.locbtn{
+  top: 0;
+  right: 0;
+  position: absolute;
+}
+
+.title{
+  top: -10px;
+  left: inherit;
+  position: relative;
+  font-family: 'Lora' !important;
+  color: white;
+}
+
+@font-face {   
+  font-family: 'Lora';
+  src: url('../fonts/Lora-SemiBold.ttf');
+}
+
+.white{
+  color: white;
+}

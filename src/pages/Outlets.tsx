@@ -1,6 +1,6 @@
 import { isPlatform } from '@ionic/core';
 import { Redirect, Route } from 'react-router-dom';
-import { IonButton, IonCardContent, IonRouterOutlet, IonCard, IonList, IonItem, IonAvatar, IonCardTitle, IonCardHeader, IonLabel, IonRow, IonCol, IonGrid, IonContent, IonButtons, IonFab, IonFabButton, IonHeader, IonIcon, IonPage, IonTitle, IonToolbar, IonBackButton, IonSearchbar, IonChip, IonItemDivider } from '@ionic/react';
+import { IonButton, IonCardSubtitle, IonCardContent, IonRouterOutlet, IonCard, IonList, IonItem, IonAvatar, IonCardTitle, IonCardHeader, IonLabel, IonRow, IonCol, IonGrid, IonContent, IonButtons, IonFab, IonFabButton, IonHeader, IonIcon, IonPage, IonTitle, IonToolbar, IonBackButton, IonSearchbar, IonChip, IonItemDivider } from '@ionic/react';
 import { locationSharp, chevronDownOutline } from 'ionicons/icons';
 import {GoogleMap, InfoWindow, LoadScript, Marker} from '@react-google-maps/api';
 import { useContext, useEffect, useState } from 'react';
@@ -14,9 +14,18 @@ import './Outlets.css';
 
 const Outlets: React.FC = () => {
   const google = window.google;
+  const containerStyle = {
+    width:'100%',
+    height: '150px',
+    margin:'auto'
+  };
+
+  const [selectedLat, setLat] = useState<number>(0);
+  const [selectedLng, setLng] = useState<number>(0);
+  
   
   const laundryCtx = useContext(LaundryContext);
-  const [locName, setlocname] = useState<string>("tertiary");
+  const [locName, setlocname] = useState<string>("primary");
   
   const [filterCourier, setfilterCourier] = useState(false);
   const [courierChip, setCourierChip] = useState<string>("");
@@ -26,7 +35,6 @@ const Outlets: React.FC = () => {
   const [nearbyChip, setNearbyChip] = useState<string>("");
 
   const courierReady = laundryCtx.outlets.filter(outlet => outlet.courier === 'yes');
-  const nearby = laundryCtx.outlets.sort((a,b) => a.distance - b.distance)
 
   const filterCourierHandler = () =>{
     
@@ -49,12 +57,13 @@ const Outlets: React.FC = () => {
   const sortNearbyHandler = () =>{
     
     if(sortNearby===false){
-      setOutlets(nearby);
+      setOutlets(currOutlets.sort((a,b) => a.distance - b.distance));
       setNearby(!sortNearby);
       setNearbyChip("primary");
+      console.log(currOutlets.sort((a,b) => a.distance - b.distance));
     }
     if(sortNearby===true){
-      setOutlets(laundryCtx.outlets);
+      setOutlets(currOutlets.sort((a,b) => a.id.localeCompare(b.id)));
       setNearby(!sortNearby);
       setNearbyChip("");
     }
@@ -65,6 +74,8 @@ const Outlets: React.FC = () => {
       { latitude: laundryCtx.location.latitude, longitude: laundryCtx.location.longitude },
       { latitude: outletlat , longitude: outletlng })
   }
+
+  const [searchText, setSearchText] = useState('');
 
   // var geocoder = new google.maps.Geocoder();
   // var latlng = new google.maps.LatLng(laundryCtx.location.latitude, laundryCtx.location.longitude);
@@ -94,13 +105,19 @@ const Outlets: React.FC = () => {
 
 
   useEffect(()=>{
-  },[])
+    laundryCtx.updateDistance(laundryCtx.location.latitude, laundryCtx.location.longitude);
+    const searchResult = laundryCtx.outlets.filter(outlet => outlet.name.includes(searchText));
+    if(filterCourier == true){
+      setOutlets(searchResult.filter(outlet => outlet.courier === 'yes'));
+    } else
+    setOutlets(searchResult);
+  },[searchText]);
 
 
   return (
     <IonPage>
       <IonHeader>
-        <IonToolbar color='tertiary'>
+        <IonToolbar color='primary'>
         <IonButtons slot='start'>
             <IonBackButton defaultHref='/navi/home'></IonBackButton>
           </IonButtons>
@@ -113,31 +130,29 @@ const Outlets: React.FC = () => {
             <IonCol>
 
             <IonCard>
-                <IonCardContent>
-                <IonGrid>
-                  <IonRow>
-                    <IonCol size='2'>
-                    <img src={locationSharp}/>
-                    </IonCol>
-                    <IonCol>
-                    
-                    <IonLabel>
-                    Your current location <br/>
-                    {laundryCtx.location.latitude}, {laundryCtx.location.longitude}
-                    </IonLabel>
-                    
-                    </IonCol>
-                    <div className='ion-text-end'> <IonButton fill='clear' routerLink='/location'><IonIcon slot="icon-only" icon={chevronDownOutline}></IonIcon></IonButton></div>
-                  </IonRow>
-                </IonGrid>
-                </IonCardContent>
-              </IonCard>
+             
+             <IonCardHeader>
+               
+               <IonCardSubtitle>
+               <IonIcon icon={locationSharp}></IonIcon>Your Current Location</IonCardSubtitle>
+
+
+               <div className='locbtn'> <IonButton fill='clear' routerLink='/location'><IonIcon slot="icon-only" icon={chevronDownOutline}></IonIcon></IonButton></div>
+
+               </IonCardHeader>
+         <GoogleMap
+         mapContainerStyle={containerStyle}
+         center={laundryCtx.location==={latitude: 0, longitude: 0}?{lat:selectedLat, lng:selectedLng}:{lat: laundryCtx.location.latitude, lng: laundryCtx.location.longitude}}
+         zoom={18}><></>
+         <Marker position={laundryCtx.location==={latitude: 0, longitude: 0}?{lat:selectedLat, lng:selectedLng}:{lat: laundryCtx.location.latitude, lng: laundryCtx.location.longitude}}/>
+         </GoogleMap>
+           </IonCard>
 
             </IonCol>
           </IonRow>
           <IonRow>
             <IonCol>
-            <IonSearchbar>
+            <IonSearchbar value={searchText} onIonChange={e => setSearchText(e.detail.value!)}>
 
             </IonSearchbar>
             </IonCol>
@@ -177,9 +192,9 @@ const Outlets: React.FC = () => {
           
           { outlet.distance>=1000?
       " km":" m"} | {outlet.location}<br/>
-                  {outlet.courier==="yes"?<IonLabel>Courier Ready <IonIcon icon={courier}></IonIcon></IonLabel>:<IonLabel/>}
+                  {outlet.courier==="yes"?<IonLabel>Courier Ready <IonIcon icon={courier}></IonIcon></IonLabel>:<br/>}
                   </IonLabel>
-                  
+                  <br/>
                   <Rating readonly={true}
                  ratingValue={outlet.rating}/>
                 </IonCol>
