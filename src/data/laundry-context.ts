@@ -4,6 +4,9 @@ export interface Outlet {
     imageSrc: string;
     name: string;
     location: string;
+    address: string;
+    phone: string;
+    hours: string;
     llat: number;
     llng: number;
     id: string;
@@ -17,10 +20,12 @@ export interface Order {
     num: number;
     type: string;
     date: string;
+    pickupdate: string;
     deliverydate: string;
     price: number;
     delivery: number;
     total: number;
+    address: string;
 }
 
 export interface Location {
@@ -33,7 +38,7 @@ const LaundryContext = React.createContext<{
     orders: Order[];
     location: Location;
     chooseLocation: (latitude: number, longitude: number) => void;
-    addOrder: (num: number, type: string, date: string, deliverydate: string, price: number, delivery: number, total: number) => void;
+    addOrder: (num: number, type: string, date: string, pickupdate: string, deliverydate: string, price: number, delivery: number, total: number, address: string) => void;
     updateDistance: (loclat: number, loclng: number) => void;
 }>({
     outlets: [],

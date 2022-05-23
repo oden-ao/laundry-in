@@ -12,7 +12,7 @@ import courier from '../images/SVG/delivery.svg'
 import LaundryContext from '../data/laundry-context';
 import './Outlets.css';
 
-const Outlets: React.FC = () => {
+const NearbyOutlets: React.FC = () => {
   const google = window.google;
   const containerStyle = {
     width:'100%',
@@ -169,7 +169,7 @@ const [chosenOutlet, setChosenOutlet] = useState<{
         <IonButtons slot='start'>
             <IonBackButton defaultHref='/navi/home'></IonBackButton>
           </IonButtons>
-          <IonTitle>Outlets</IonTitle>
+          <IonTitle>Nearby Outlets</IonTitle>
         </IonToolbar>
       </IonHeader>
       <IonContent>
@@ -211,10 +211,6 @@ const [chosenOutlet, setChosenOutlet] = useState<{
                 <IonLabel>Courier
                 </IonLabel>
               </IonChip>
-              <IonChip onClick={sortNearbyHandler} color={nearbyChip}>
-                <IonLabel>Nearby
-                </IonLabel>
-              </IonChip>
             </IonCol>
           </IonRow>
           <IonRow>
@@ -222,7 +218,7 @@ const [chosenOutlet, setChosenOutlet] = useState<{
           </IonRow>
         </IonGrid>
        <IonList>
-       {currOutlets.map(outlet => (
+       {currOutlets.sort((a,b) => a.distance - b.distance).map(outlet => (
           <IonItem key={outlet.id} onClick={chooseOutletHandler.bind(null, outlet.id)}>
             <IonGrid>
               <IonRow>
@@ -262,4 +258,4 @@ const [chosenOutlet, setChosenOutlet] = useState<{
   );
 };
 
-export default Outlets;
+export default NearbyOutlets;

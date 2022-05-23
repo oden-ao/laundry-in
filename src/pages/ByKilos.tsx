@@ -1,6 +1,6 @@
 import { isPlatform } from '@ionic/core';
 import { Redirect, Route } from 'react-router-dom';
-import { IonButton, IonCardSubtitle, IonToast, IonLoading, IonCardContent, IonRouterOutlet, IonCard, IonList, IonItem, IonAvatar, IonCardTitle, IonCardHeader, IonLabel, IonRow, IonCol, IonGrid, IonContent, IonButtons, IonFab, IonFabButton, IonHeader, IonIcon, IonPage, IonTitle, IonToolbar, IonBackButton, IonSearchbar, IonChip, IonItemDivider, IonListHeader, IonFooter, IonModal, IonDatetime, IonBackdrop } from '@ionic/react';
+import { IonButton, IonCardSubtitle, IonToast, IonLoading, IonCardContent, IonRouterOutlet, IonCard, IonList, IonItem, IonAvatar, IonCardTitle, IonCardHeader, IonLabel, IonRow, IonCol, IonGrid, IonContent, IonButtons, IonFab, IonFabButton, IonHeader, IonIcon, IonPage, IonTitle, IonToolbar, IonBackButton, IonSearchbar, IonChip, IonItemDivider, IonListHeader, IonFooter, IonModal, IonDatetime, IonBackdrop, IonText } from '@ionic/react';
 import { locationSharp, chevronDownOutline, arrowForward, arrowBack, arrowBackCircle, removeCircle, addCircle, cartOutline, close, warningOutline, chevronForward } from 'ionicons/icons';
 import {GoogleMap, InfoWindow, LoadScript, Marker} from '@react-google-maps/api';
 import {Geolocation} from '@capacitor/geolocation';
@@ -10,15 +10,14 @@ import { Rating } from 'react-simple-star-rating'
 import { format, parseISO, getDate, getMonth, getYear, formatISO, add, parse } from 'date-fns';
 import { useHistory } from 'react-router-dom';
 
-import shirt from '../images/SVG/Shirt.svg'
-import pantsimg from '../images/SVG/Pants.svg'
-import blazer from '../images/SVG/Blazer.svg'
-import courier from '../images/SVG/delivery.svg'
+import shoe from '../images/SVG/shoes.svg'
+import bagsimg from '../images/SVG/bags.svg'
+import doll from '../images/SVG/doll.svg'
 
 import LaundryContext from '../data/laundry-context';
 import './ByUnit.css';
 
-const ByUnit: React.FC = () => {
+const ByKilos: React.FC = () => {
 
   const laundryCtx = useContext(LaundryContext);
 
@@ -56,7 +55,15 @@ const ByUnit: React.FC = () => {
   //   getCurrentPosition();
   // }, [history])
 
-
+  useEffect(()=>{
+    let mounted = true;
+    if (mounted){
+      laundryCtx.updateDistance(laundryCtx.location.latitude, laundryCtx.location.longitude);
+      // getCurrentPosition();
+    }
+    return () =>{ mounted = false;  
+    }
+  }, [])
 
   const selectPos = (e: google.maps.MapMouseEvent) => {
     if(e.latLng?.lat()){setLat(e.latLng?.lat());}
@@ -80,33 +87,19 @@ const ByUnit: React.FC = () => {
     setChangeLoc(false);
   }
   
-  const [shirts, setShirts] = useState<number>(0);
-  const [pants, setPants] = useState<number>(0);
-  const [blazers, setBlazers] = useState<number>(0);
-  const minDate = formatISO(add(new Date(), {days: 1}));
-  
+  const [shoes, setShoes] = useState<number>(0);
+  const [bags, setBags] = useState<number>(0);
+  const [dolls, setDolls] = useState<number>(0);
+  const minDate = formatISO(add(new Date(), {days: 2}));
 
-  const [selectedPickupDate, setSelectedPickupDate] = useState<string>(minDate);
-  const minDeliveryDate = formatISO(add(parseISO(selectedPickupDate), {days: 2}));
-  const [selectedDeliveryDate, setSelectedDeliveryDate] = useState<string>(minDeliveryDate);
-
-
+  const [selectedDate, setSelectedDate] = useState<string>(minDate);
+  const [openDate, setOpenDate] = useState(false);
 
   const currDate = formatISO(new Date())
   
   const formatDate = (value: string) => {
     return format(parseISO(value), 'MMM dd yyyy kk:mm');
   };
-
-  useEffect(()=>{
-    let mounted = true;
-    if (mounted){
-      laundryCtx.updateDistance(laundryCtx.location.latitude, laundryCtx.location.longitude);
-      // getCurrentPosition();
-    }
-    return () =>{ mounted = false;  
-    }
-  }, [])
 
   const [selectOutlet, setSelectOutlet] = useState(false);
   const [chosenOutlet, setChosenOutlet] = useState<{imageSrc: string,
@@ -144,39 +137,39 @@ const closeOrderHandler = () => {
 };
 
   const nearby = laundryCtx.outlets.filter(outlet => outlet.courier === 'yes').sort((a,b) => a.distance - b.distance)
-  const addShirt = () =>{
-    setShirts(shirts + 1)
+  const addKilo = () =>{
+    setShoes(shoes + 1)
   }
-  const removeShirt = () =>{
-    if (shirts > 0){
-      setShirts(shirts - 1)
+  const removeKilo = () =>{
+    if (shoes > 0){
+      setShoes(shoes - 1)
     }
   }
 
-  const addPants = () =>{
-    setPants(pants + 1)
+  const addBags = () =>{
+    setBags(bags + 1)
   }
-  const removePants = () =>{
-    if (pants > 0){
-      setPants(pants - 1)
+  const removeBags = () =>{
+    if (bags > 0){
+      setBags(bags - 1)
     }
   }
 
-  const addBlazers = () =>{
-    setBlazers(blazers + 1)
+  const addDolls = () =>{
+    setDolls(dolls + 1)
   }
-  const removeBlazers = () =>{
-    if (blazers > 0){
-      setBlazers(blazers - 1)
+  const removeDolls = () =>{
+    if (dolls > 0){
+      setDolls(dolls - 1)
     }
   }
 
-  const total = (shirts * 15000) + (pants * 20000) + (blazers * 30000);
-  const quantity = shirts + pants + blazers;
+  const total = (shoes * 40000) + (bags * 50000) + (dolls * 35000);
+  const quantity = shoes + bags + dolls;
 
 
   const placeOrderHandler = () =>{
-    laundryCtx.addOrder(laundryCtx.orders.length + 1, "Unit", formatDate(currDate) ,formatDate(selectedPickupDate), formatDate(selectedDeliveryDate), total, chosenOutlet!.fee, total + chosenOutlet!.fee, (String(laundryCtx.location.latitude), String(laundryCtx.location.longitude)));
+    laundryCtx.addOrder(laundryCtx.orders.length + 1, "Other", formatDate(currDate) , formatDate(selectedDate), formatDate(selectedDate), total, chosenOutlet!.fee, total + chosenOutlet!.fee, (laundryCtx.location.latitude, laundryCtx.location.longitude).toString());
     setConfirmScreen(false);
     setToastMessage('Order placed');
     history.length > 0 ? history.goBack(): history.replace('/navi/home');  
@@ -248,30 +241,30 @@ const closeOrderHandler = () => {
               <IonCard>
                 <IonCardContent>
                   <IonCardTitle>Your Order</IonCardTitle>
-                  {shirts>0?<IonRow>
+                  {shoes>0?<IonRow>
                     <IonCol>
-                      Shirts x {shirts}
+                      Shoes x {shoes}
                     </IonCol>
                     <IonCol>
-                      {(shirts * 15000).toLocaleString()} IDR
-                    </IonCol>
-                  </IonRow>:
-                  <IonRow></IonRow>}
-                  {pants>0?<IonRow>
-                    <IonCol>
-                      Pants x {pants}
-                    </IonCol>
-                    <IonCol>
-                      {(pants * 20000).toLocaleString()} IDR
+                      {(shoes * 40000).toLocaleString()} IDR
                     </IonCol>
                   </IonRow>:
                   <IonRow></IonRow>}
-                  {blazers>0?<IonRow>
+                  {bags>0?<IonRow>
                     <IonCol>
-                      Blazers x {blazers}
+                      Bags x {bags}
                     </IonCol>
                     <IonCol>
-                      {(blazers * 30000).toLocaleString()} IDR
+                      {(bags * 50000).toLocaleString()} IDR
+                    </IonCol>
+                  </IonRow>:
+                  <IonRow></IonRow>}
+                  {dolls>0?<IonRow>
+                    <IonCol>
+                      Dolls x {dolls}
+                    </IonCol>
+                    <IonCol>
+                      {(dolls * 35000).toLocaleString()} IDR
                     </IonCol>
                   </IonRow>:
                   <IonRow></IonRow>}
@@ -297,32 +290,18 @@ const closeOrderHandler = () => {
           <IonCard>
             <IonCardContent>
               <IonCardTitle>
-                Preferred Pickup Time
-              </IonCardTitle>
-              {formatDate(selectedPickupDate)} <br/>
-              <IonButton id='open-pickupdate'>Change Time</IonButton><br/>
-            
-            </IonCardContent>
-          </IonCard>
-          <IonModal trigger='open-pickupdate' className='transparent'>
-              <IonDatetime min={minDate} hourValues="8,9,10,11,12,13,14,15,16,17,18" minuteValues="0,15,30,45" hourCycle='h23' showDefaultButtons={true} className='date' value={selectedPickupDate} onIonChange={e => setSelectedPickupDate(e.detail.value!)}>
-              </IonDatetime>
-          </IonModal>
-
-          <IonCard>
-            <IonCardContent>
-              <IonCardTitle>
                 Preferred Delivery Time
               </IonCardTitle>
-              {formatDate(selectedDeliveryDate)} <br/>
-              <IonButton id='open-deliverydate'>Change Time</IonButton><br/>
-              Note: Orders take around a day to complete.<br/>
-              {selectedDeliveryDate < minDeliveryDate?"Please pick a valid delivery date!":""}
+              {formatDate(selectedDate)} <br/>
+              <IonButton id='open-date'>Change Time</IonButton><br/>
+              Note: Orders take around a day to complete.
             </IonCardContent>
           </IonCard>
-          <IonModal trigger='open-deliverydate' className='transparent'>
-              <IonDatetime min={minDeliveryDate} hourValues="8,9,10,11,12,13,14,15,16,17,18" minuteValues="0,15,30,45" hourCycle='h23' showDefaultButtons={true} className='date' value={selectedDeliveryDate} onIonChange={e => setSelectedDeliveryDate(e.detail.value!)}>
+          <IonModal trigger='open-date' className='transparent' isOpen={openDate}>
+              <IonDatetime min={minDate} hourValues="8,9,10,11,12,13,14,15,16,17,18" minuteValues="0,15,30,45" hourCycle='h23' showDefaultButtons={true} className='date' value={selectedDate} onIonChange={e => setSelectedDate(e.detail.value!)}>
               </IonDatetime>
+              
+
           </IonModal>
 
               <IonCard>
@@ -370,7 +349,7 @@ const closeOrderHandler = () => {
       <IonFooter> 
 
           
-        {chosenOutlet==null || selectedDeliveryDate < minDeliveryDate?
+        {chosenOutlet==null?
         <IonToolbar>
         <IonButtons slot='start'>
         <IonButton fill='clear' disabled={true}><IonIcon slot='icon-only' icon={warningOutline}></IonIcon></IonButton>
@@ -444,83 +423,76 @@ const closeOrderHandler = () => {
         <IonButtons slot='start'>
             <IonBackButton defaultHref='/navi/home'></IonBackButton>
           </IonButtons>
-          <IonTitle>Unit</IonTitle>
+          <IonTitle>Kilo</IonTitle>
         </IonToolbar>
       </IonHeader>
 
       <IonContent>
         <IonGrid>
-          <IonRow>
-            <IonCol>
+          <IonCard>
+            <IonCardHeader className='ion-text-center'><b>Kilos</b></IonCardHeader>
+            <IonCardContent className='ion-text-center'>
+            
+            <IonCol className='ion-text-center' size='1.5'>
+                  <IonButton onClick={removeKilo} fill="clear" className='arrows'><IonIcon slot='icon-only' icon={removeCircle}></IonIcon></IonButton>
+                  </IonCol>
+              <IonCol className='nowrap' size='1'>
+                  {shoes}
+                  </IonCol>
+              <IonCol className='ion-text-center' size='1.5'>
+                  <IonButton onClick={addKilo} fill="clear" className='arrows'><IonIcon slot='icon-only' icon={addCircle}></IonIcon></IonButton>
+              </IonCol>
               
-              <IonList>
-                <IonListHeader>
-                Select clothes by unit
-                </IonListHeader>
+              <IonRow className='ion-text-left'>
+                1. Estimate your kilos <br/>
+                2. Our staff
+              </IonRow>
 
-                <IonItem>
-                <IonCol  className='ion-text-center'>
-                  <img src={shirt}/>
-                  </IonCol>
-                  <IonCol>
-                  <b>Shirts</b>
-                  </IonCol>
-                  <IonCol>
-                  IDR 15,000
-                  </IonCol>
-                  <IonCol className='ion-text-center' size='1.5'>
-                  <IonButton onClick={removeShirt} fill="clear" className='arrows'><IonIcon slot='icon-only' icon={removeCircle}></IonIcon></IonButton>
-                  </IonCol>
-                  <IonCol className='nowrap' size='1'>
-                  {shirts}
-                  </IonCol>
-                  <IonCol className='ion-text-center' size='1.5'>
-                  <IonButton onClick={addShirt} fill="clear" className='arrows'><IonIcon slot='icon-only' icon={addCircle}></IonIcon></IonButton>
-                  </IonCol>
-                </IonItem>
+            </IonCardContent>
+          </IonCard>
+        <IonRow>
+          <IonCol className='ion-text-center'>
+          <IonText>Kilos</IonText>
+          </IonCol>
+              
+              </IonRow>
+          <IonRow>
+            <IonCol className='ion-text-center'>
+            
 
-                <IonItem>
-                <IonCol  className='ion-text-center'>
-                  <img src={pantsimg}/>
+            <IonCol className='ion-text-center' size='1.5'>
+                  <IonButton onClick={removeKilo} fill="clear" className='arrows'><IonIcon slot='icon-only' icon={removeCircle}></IonIcon></IonButton>
                   </IonCol>
-                  <IonCol>
-                  <b>Pants</b>
+              <IonCol className='nowrap' size='1'>
+                  {shoes}
                   </IonCol>
-                  <IonCol>
-                  IDR 20,000
-                  </IonCol>
-                  <IonCol className='ion-text-center' size='1.5'>
-                  <IonButton onClick={removePants} fill="clear" className='arrows'><IonIcon slot='icon-only' icon={removeCircle}></IonIcon></IonButton>
-                  </IonCol>
-                  <IonCol className='nowrap' size='1'>
-                  {pants}
-                  </IonCol>
-                  <IonCol className='ion-text-center' size='1.5'>
-                  <IonButton onClick={addPants} fill="clear" className='arrows'><IonIcon slot='icon-only' icon={addCircle}></IonIcon></IonButton>
-                  </IonCol>
-                </IonItem>
+              <IonCol className='ion-text-center' size='1.5'>
+                  <IonButton onClick={addKilo} fill="clear" className='arrows'><IonIcon slot='icon-only' icon={addCircle}></IonIcon></IonButton>
+              </IonCol>
+            
+            </IonCol>
+          </IonRow>
 
-                <IonItem>
-                <IonCol  className='ion-text-center'>
-                  <img src={blazer}/>
+          <IonRow>
+          <IonCol className='ion-text-center'>
+          <IonText>Kilos</IonText>
+          </IonCol>
+              
+              </IonRow>
+          <IonRow>
+            <IonCol className='ion-text-center'>
+            
+
+            <IonCol className='ion-text-center' size='1.5'>
+                  <IonButton onClick={removeKilo} fill="clear" className='arrows'><IonIcon slot='icon-only' icon={removeCircle}></IonIcon></IonButton>
                   </IonCol>
-                  <IonCol>
-                  <b>Blazers</b>
+              <IonCol className='nowrap' size='1'>
+                  {shoes}
                   </IonCol>
-                  <IonCol>
-                  IDR 30,000
-                  </IonCol>
-                  <IonCol className='ion-text-center' size='1.5'>
-                  <IonButton onClick={removeBlazers} fill="clear" className='arrows'><IonIcon slot='icon-only' icon={removeCircle}></IonIcon></IonButton>
-                  </IonCol>
-                  <IonCol className='nowrap' size='1'>
-                  {blazers}
-                  </IonCol>
-                  <IonCol className='ion-text-center' size='1.5'>
-                  <IonButton onClick={addBlazers} fill="clear" className='arrows'><IonIcon slot='icon-only' icon={addCircle}></IonIcon></IonButton>
-                  </IonCol>
-                </IonItem>
-              </IonList>
+              <IonCol className='ion-text-center' size='1.5'>
+                  <IonButton onClick={addKilo} fill="clear" className='arrows'><IonIcon slot='icon-only' icon={addCircle}></IonIcon></IonButton>
+              </IonCol>
+            
             </IonCol>
           </IonRow>
 
@@ -533,7 +505,7 @@ const closeOrderHandler = () => {
 
 
       <IonFooter>
-        {shirts == 0 && pants == 0 && blazers == 0?
+        {shoes == 0 && bags == 0 && dolls == 0?
         <IonToolbar color='primary'>
           <IonTitle>No items added</IonTitle>
         </IonToolbar>:
@@ -550,4 +522,4 @@ const closeOrderHandler = () => {
   );
 };
 
-export default ByUnit;
+export default ByKilos;

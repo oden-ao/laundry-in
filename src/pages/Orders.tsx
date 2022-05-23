@@ -65,6 +65,15 @@ const Orders: React.FC = () => {
 
                 <IonRow>
                   <IonCol>
+                    Pickup Time
+                  </IonCol>
+                  <IonCol className='ion-text-end'>
+                  {order.pickupdate}
+                  </IonCol>
+                </IonRow>
+
+                <IonRow>
+                  <IonCol>
                     Delivery Time
                   </IonCol>
                   <IonCol className='ion-text-end'>
@@ -77,7 +86,7 @@ const Orders: React.FC = () => {
                     Address
                   </IonCol>
                   <IonCol className='ion-text-end'>
-                  Ruko Pascal Timur No. 8 Lt.2, Gading Serpong
+                  {order.address}
                   </IonCol>
                 </IonRow>
 

@@ -29,6 +29,9 @@ import ByUnit from './pages/ByUnit';
 import NavigationBar from './pages/NavigationBar';
 // import LaundryContext from './data/laundry-context';
 import LaundryContextProvider from './data/LaundryContextProvider';
+import ByOther from './pages/ByOther';
+import ByKilo from './pages/ByKilo';
+import NearbyOutlets from './pages/Nearby';
 
 setupIonicReact();
 
@@ -43,6 +46,9 @@ return(
     <Route path="/outlets" component={Outlets}/>
     <Route path="/location" component={ChooseLoc}/>
     <Route path="/unit"  component={ByUnit}/>
+    <Route path="/other"  component={ByOther}/>
+    <Route path="/kilo"  component={ByKilo}/>
+    <Route path="/nearby"  component={NearbyOutlets}/>
     <Redirect exact from="/" to ="/navi/home" />
     
       <Route path="navi/home" component={NavigationBar}/>

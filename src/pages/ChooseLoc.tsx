@@ -1,4 +1,4 @@
-import { IonBackButton, IonToast, IonFab, IonItem, IonGrid, IonButton, IonIcon, IonButtons, IonRow, IonCol, IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonLabel, IonInput, IonSelect, IonSelectOption, IonFabButton, IonActionSheet } from '@ionic/react';
+import { IonBackButton, IonCard, IonToast, IonFab, IonItem, IonGrid, IonButton, IonIcon, IonButtons, IonRow, IonCol, IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonLabel, IonInput, IonSelect, IonSelectOption, IonFabButton, IonActionSheet, IonFooter, IonCardTitle, IonCardContent, IonCardSubtitle } from '@ionic/react';
 import {arrowBack, cameraOutline} from 'ionicons/icons';
 import { useState, useRef, useContext, useEffect } from 'react';
 import {Camera, CameraResultType, CameraSource} from '@capacitor/camera';
@@ -24,14 +24,14 @@ const ChooseLoc: React.FC = () => {
   const [selectedLng, setLng] = useState<number>(1);
 
 
-  const getCurrentPosition = async () => {
-    const coordinates = await Geolocation.getCurrentPosition({enableHighAccuracy:true});
-    console.log('Current position:', coordinates);
-    console.log('Lat:', coordinates.coords.latitude);
-    console.log('Lng:', coordinates.coords.longitude);
-    setLat(coordinates.coords.latitude);
-    setLng(coordinates.coords.longitude);
-  };
+  // const getCurrentPosition = async () => {
+  //   const coordinates = await Geolocation.getCurrentPosition({enableHighAccuracy:true});
+  //   console.log('Current position:', coordinates);
+  //   console.log('Lat:', coordinates.coords.latitude);
+  //   console.log('Lng:', coordinates.coords.longitude);
+  //   setLat(coordinates.coords.latitude);
+  //   setLng(coordinates.coords.longitude);
+  // };
 
   useEffect(()=>{
     let mounted = true;
@@ -75,7 +75,6 @@ const ChooseLoc: React.FC = () => {
           </IonFabButton>
       </IonFab>
       
-      
             <GoogleMap onClick={selectPos}
             mapContainerStyle={containerStyle}
             center={laundryCtx.location==={latitude: 0, longitude: 0}?{lat:selectedLat, lng:selectedLng}:{lat: laundryCtx.location.latitude, lng: laundryCtx.location.longitude}}
@@ -83,16 +82,25 @@ const ChooseLoc: React.FC = () => {
             <Marker position={{lat: selectedLat, lng: selectedLng}}/>
             </GoogleMap>
      
-      <IonGrid>
-      <IonRow>
-        <IonCol >
-          <IonButton fill="clear" onClick={chooseLocHandler}>Cancel</IonButton>
-        </IonCol>
-        <IonCol >
-          <IonButton onClick={chooseLocHandler}>Address Confirm</IonButton>
-        </IonCol>
-      </IonRow>
-      </IonGrid>
+            <IonCard>
+          <IonCardContent>
+          <IonCardSubtitle>Your current location</IonCardSubtitle>
+          {selectedLat}, {selectedLng}
+          <IonGrid>
+        
+        <IonRow>
+          <IonCol>
+            <IonButton fill="clear" onClick={chooseLocHandler}>Cancel</IonButton>
+          </IonCol>
+          <IonCol >
+            <IonButton onClick={chooseLocHandler}>Address Confirm</IonButton>
+          </IonCol>
+        </IonRow>
+        </IonGrid>
+          </IonCardContent>
+          
+        </IonCard>
+     
 
      
     </IonPage>

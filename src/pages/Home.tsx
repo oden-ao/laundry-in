@@ -56,15 +56,6 @@ const Home: React.FC = () => {
 
   return (
     <IonPage>
-      {/* <IonHeader translucent={true}>
-        <IonToolbar className='translucent'>    */}
-          {/* <IonTitle>LaundryIn</IonTitle> */}
-          {/* <IonButtons slot='end'>
-            <IonButton slot="icon-only"><IonIcon icon={giftOutline}></IonIcon></IonButton>
-            <IonButton slot="icon-only"><IonIcon icon={notificationsOutline}></IonIcon></IonButton>
-          </IonButtons> */}
-        {/* </IonToolbar>
-      </IonHeader> */}
       <IonContent>
       
               <IonGrid className='header'>
@@ -147,7 +138,7 @@ const Home: React.FC = () => {
           </IonRow>
           <IonRow className='ion-text-center'>
             <IonCol>
-              <IonCard>
+              <IonCard routerLink='/kilo'>
                 <IonCardContent>
                   <IonIcon icon={kiloan} size="large"></IonIcon>
                 </IonCardContent>
@@ -163,7 +154,7 @@ const Home: React.FC = () => {
               Unit
             </IonCol>
             <IonCol>
-            <IonCard>
+            <IonCard routerLink='/other'>
                 <IonCardContent>
                 <IonIcon icon={other} size="large"></IonIcon>
                 </IonCardContent>
@@ -187,7 +178,7 @@ const Home: React.FC = () => {
               All
             </IonCol>
             <IonCol>
-            <IonCard>
+            <IonCard routerLink='/nearby'>
                 <IonCardContent>
                 <IonIcon icon={nearby} size="large"></IonIcon>
                 </IonCardContent>
