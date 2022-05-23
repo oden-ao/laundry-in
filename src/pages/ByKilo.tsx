@@ -10,7 +10,7 @@ import { Rating } from 'react-simple-star-rating'
 import { format, parseISO, getDate, getMonth, getYear, formatISO, add, parse } from 'date-fns';
 import { useHistory } from 'react-router-dom';
 
-import pantsimg from '../images/SVG/bags.svg'
+import shirt from '../images/SVG/Shirt.svg'
 import blazer from '../images/SVG/Blazer.svg'
 import courier from '../images/SVG/delivery.svg'
 
@@ -151,11 +151,10 @@ const closeOrderHandler = () => {
   }
 
   const total = (kilos * 10000);
-  const quantity = kilos;
 
 
   const placeOrderHandler = () =>{
-    laundryCtx.addOrder(laundryCtx.orders.length + 1, "Other", formatDate(currDate) ,formatDate(selectedPickupDate), formatDate(selectedDeliveryDate), total, chosenOutlet!.fee, total + chosenOutlet!.fee, (laundryCtx.location.latitude, laundryCtx.location.longitude).toString());
+    laundryCtx.addOrder(laundryCtx.orders.length + 1, "Kilos", formatDate(currDate) ,formatDate(selectedPickupDate), formatDate(selectedDeliveryDate), total, chosenOutlet!.fee, total + chosenOutlet!.fee, (laundryCtx.location.latitude, laundryCtx.location.longitude).toString());
     setConfirmScreen(false);
     setToastMessage('Order placed');
     history.length > 0 ? history.goBack(): history.replace('/navi/home');  
@@ -178,16 +177,24 @@ const closeOrderHandler = () => {
             zoom={18}><></>
             <Marker position={laundryCtx.location==={latitude: 0, longitude: 0}?{lat:selectedLat, lng:selectedLng}:{lat: laundryCtx.location.latitude, lng: laundryCtx.location.longitude}}/>
             </GoogleMap>
-      <IonGrid>
-      <IonRow>
-        <IonCol >
-          <IonButton fill="clear" onClick={cancelLocHandler}>Cancel</IonButton>
-        </IonCol>
-        <IonCol >
-          <IonButton onClick={chooseLocHandler}>Address Confirm</IonButton>
-        </IonCol>
-      </IonRow>
-      </IonGrid>
+            <IonCard>
+          <IonCardContent>
+          <IonCardSubtitle>Your current location</IonCardSubtitle>
+          {selectedLat}, {selectedLng}
+          <IonGrid>
+        
+        <IonRow>
+          <IonCol>
+            <IonButton fill="clear" onClick={cancelLocHandler}>Cancel</IonButton>
+          </IonCol>
+          <IonCol >
+            <IonButton onClick={chooseLocHandler}>Address Confirm</IonButton>
+          </IonCol>
+        </IonRow>
+        </IonGrid>
+          </IonCardContent>
+          
+        </IonCard>
       </IonModal>
 
       <IonModal isOpen={confirmScreen}>
@@ -227,7 +234,7 @@ const closeOrderHandler = () => {
                   <IonCardTitle>Your Order</IonCardTitle>
                  <IonRow>
                    <IonCol>
-                     {kilos} kilos
+                     {kilos} kilos, {pieces} pcs
                    </IonCol>
                    <IonCol>
                      {kilos * 10000} IDR
@@ -328,7 +335,7 @@ const closeOrderHandler = () => {
       <IonFooter> 
 
           
-        {chosenOutlet==null && selectedDeliveryDate < minDeliveryDate?
+        {chosenOutlet==null || selectedDeliveryDate < minDeliveryDate?
         <IonToolbar>
         <IonButtons slot='start'>
         <IonButton fill='clear' disabled={true}><IonIcon slot='icon-only' icon={warningOutline}></IonIcon></IonButton>
@@ -409,6 +416,7 @@ const closeOrderHandler = () => {
       <IonContent>
         <IonGrid>
           <IonCard>
+            
             <IonCardHeader className='ion-text-center'><b>Kilos</b></IonCardHeader>
             <IonCardContent className='ion-text-center'>
             
@@ -423,15 +431,20 @@ const closeOrderHandler = () => {
               </IonCol>
               
               <IonRow className='ion-text-left'>
-                1. Estimate your kilos <br/>
-                2. Our staff
+                Note: <br/>
+                1. Estimate how many kilograms your order will be <br/>
+                2. Our staff will weigh your order again on pickup <br/>
+                3. Your order's price will be adjusted accordingly
               </IonRow>
 
             </IonCardContent>
           </IonCard>
 
           <IonCard>
-            <IonCardHeader className='ion-text-center'><b>Pieces</b></IonCardHeader>
+            <IonCardHeader className='ion-text-center'><b>Pieces</b>
+            <br/><br/>
+            <img src={shirt}></img></IonCardHeader>
+            
             <IonCardContent className='ion-text-center'>
             
             <IonCol className='ion-text-center' size='1.5'>
@@ -445,8 +458,8 @@ const closeOrderHandler = () => {
               </IonCol>
               
               <IonRow className='ion-text-left'>
-                1. Estimate how many pieces <br/>
-                2. Our staff
+                Note: <br/>
+                Estimate the amount of clothing pieces in your order. This will help our staff in finishing your order, as well as making sure that all of your clothing pieces are accounted for.
               </IonRow>
 
             </IonCardContent>
@@ -462,9 +475,9 @@ const closeOrderHandler = () => {
 
 
       <IonFooter>
-        {kilos == 0 && pieces == 0?
+        {kilos == 0 || pieces == 0?
         <IonToolbar color='primary'>
-          <IonTitle>Kilo and pieces not set.</IonTitle>
+          <IonTitle>Kilo and/or pieces not set.</IonTitle>
         </IonToolbar>:
         <IonToolbar color='primary'>
         <IonButtons slot='end'>

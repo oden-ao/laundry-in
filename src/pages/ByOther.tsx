@@ -205,16 +205,24 @@ const closeOrderHandler = () => {
             zoom={18}><></>
             <Marker position={laundryCtx.location==={latitude: 0, longitude: 0}?{lat:selectedLat, lng:selectedLng}:{lat: laundryCtx.location.latitude, lng: laundryCtx.location.longitude}}/>
             </GoogleMap>
-      <IonGrid>
-      <IonRow>
-        <IonCol >
-          <IonButton fill="clear" onClick={cancelLocHandler}>Cancel</IonButton>
-        </IonCol>
-        <IonCol >
-          <IonButton onClick={chooseLocHandler}>Address Confirm</IonButton>
-        </IonCol>
-      </IonRow>
-      </IonGrid>
+            <IonCard>
+          <IonCardContent>
+          <IonCardSubtitle>Your current location</IonCardSubtitle>
+          {selectedLat}, {selectedLng}
+          <IonGrid>
+        
+        <IonRow>
+          <IonCol>
+            <IonButton fill="clear" onClick={cancelLocHandler}>Cancel</IonButton>
+          </IonCol>
+          <IonCol >
+            <IonButton onClick={chooseLocHandler}>Address Confirm</IonButton>
+          </IonCol>
+        </IonRow>
+        </IonGrid>
+          </IonCardContent>
+          
+        </IonCard>
       </IonModal>
 
       <IonModal isOpen={confirmScreen}>
@@ -238,7 +246,7 @@ const closeOrderHandler = () => {
                <IonIcon icon={locationSharp}></IonIcon>Your Current Location</IonCardSubtitle>
 
 
-               <div className='locbtn'> <IonButton fill='clear' routerLink='/location'><IonIcon slot="icon-only" icon={chevronDownOutline}></IonIcon></IonButton></div>
+               <div className='locbtn'> <IonButton fill='clear' onClick={changeLocHandler}><IonIcon slot="icon-only" icon={chevronDownOutline}></IonIcon></IonButton></div>
 
                </IonCardHeader>
          <GoogleMap

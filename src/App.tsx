@@ -32,6 +32,7 @@ import LaundryContextProvider from './data/LaundryContextProvider';
 import ByOther from './pages/ByOther';
 import ByKilo from './pages/ByKilo';
 import NearbyOutlets from './pages/Nearby';
+import CourierOutlets from './pages/Courier';
 
 setupIonicReact();
 
@@ -49,6 +50,8 @@ return(
     <Route path="/other"  component={ByOther}/>
     <Route path="/kilo"  component={ByKilo}/>
     <Route path="/nearby"  component={NearbyOutlets}/>
+    <Route path="/courier"  component={CourierOutlets}/>
+
     <Redirect exact from="/" to ="/navi/home" />
     
       <Route path="navi/home" component={NavigationBar}/>

@@ -63,6 +63,10 @@ const ChooseLoc: React.FC = () => {
     
   };
 
+  const cancelLocHandler = () => {
+    history.length > 0 ? history.goBack(): history.replace('/navi/home');
+  }
+
   return (
     <IonPage>
       <IonToast isOpen={!!toastMessage}
@@ -70,7 +74,7 @@ const ChooseLoc: React.FC = () => {
                     duration={1500}
                     onDidDismiss={() => {setToastMessage('')}}/>
       <IonFab vertical="top" horizontal="start" slot="fixed">
-      <IonFabButton routerLink='/navi/home'>
+      <IonFabButton onClick={cancelLocHandler}>
             <IonIcon icon={arrowBack}></IonIcon>
           </IonFabButton>
       </IonFab>
@@ -90,7 +94,7 @@ const ChooseLoc: React.FC = () => {
         
         <IonRow>
           <IonCol>
-            <IonButton fill="clear" onClick={chooseLocHandler}>Cancel</IonButton>
+            <IonButton fill="clear" onClick={cancelLocHandler}>Cancel</IonButton>
           </IonCol>
           <IonCol >
             <IonButton onClick={chooseLocHandler}>Address Confirm</IonButton>

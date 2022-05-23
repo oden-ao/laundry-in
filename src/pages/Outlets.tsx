@@ -34,12 +34,14 @@ const Outlets: React.FC = () => {
   const [sortNearby, setNearby] = useState(false);
   const [nearbyChip, setNearbyChip] = useState<string>("");
 
-  const courierReady = laundryCtx.outlets.filter(outlet => outlet.courier === 'yes');
+  const [sortBest, setBest] = useState(false);
+  const [bestChip, setBestChip] = useState<string>("");
+
 
   const filterCourierHandler = () =>{
     
     if(filterCourier===false){
-      setOutlets(courierReady);
+      setOutlets(currOutlets.filter(outlet => outlet.courier === 'yes'));
       setfilterCourier(!filterCourier);
       setCourierChip("primary");
       console.log(filterCourier)
@@ -66,6 +68,20 @@ const Outlets: React.FC = () => {
       setOutlets(currOutlets.sort((a,b) => a.id.localeCompare(b.id)));
       setNearby(!sortNearby);
       setNearbyChip("");
+    }
+  }
+
+  const sortBestHandler = () =>{
+    
+    if(sortBest===false){
+      setOutlets(currOutlets.sort((a,b) => b.rating - a.rating));
+      setBest(!sortBest);
+      setBestChip("primary");
+    }
+    if(sortBest===true){
+      setOutlets(currOutlets.sort((a,b) => a.id.localeCompare(b.id)));
+      setBest(!sortBest);
+      setBestChip("");
     }
   }
 
@@ -213,6 +229,10 @@ const [chosenOutlet, setChosenOutlet] = useState<{
               </IonChip>
               <IonChip onClick={sortNearbyHandler} color={nearbyChip}>
                 <IonLabel>Nearby
+                </IonLabel>
+              </IonChip>
+              <IonChip onClick={sortBestHandler} color={bestChip}>
+                <IonLabel>Best rated
                 </IonLabel>
               </IonChip>
             </IonCol>

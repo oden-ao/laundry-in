@@ -47,6 +47,7 @@ const Home: React.FC = () => {
     setLat(coordinates.coords.latitude);
     setLng(coordinates.coords.longitude);
     console.log('SelectedLat:', selectedLat);
+    console.log('SelectedLng:', selectedLng);
     laundryCtx.chooseLocation(selectedLat, selectedLng);
   };
 
@@ -186,7 +187,7 @@ const Home: React.FC = () => {
               Nearby
             </IonCol>
             <IonCol>
-            <IonCard>
+            <IonCard routerLink='/courier'>
                 <IonCardContent>
                 <IonIcon icon={courier} size="large"></IonIcon>
                 </IonCardContent>

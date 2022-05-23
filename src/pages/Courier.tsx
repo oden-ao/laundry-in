@@ -9,10 +9,11 @@ import { Rating } from 'react-simple-star-rating'
 
 import courier from '../images/SVG/delivery.svg'
 
+
 import LaundryContext from '../data/laundry-context';
 import './Outlets.css';
 
-const NearbyOutlets: React.FC = () => {
+const CourierOutlets: React.FC = () => {
   const google = window.google;
   const containerStyle = {
     width:'100%',
@@ -29,7 +30,9 @@ const NearbyOutlets: React.FC = () => {
   
   const [filterCourier, setfilterCourier] = useState(false);
   const [courierChip, setCourierChip] = useState<string>("");
-  const [currOutlets, setOutlets] = useState(laundryCtx.outlets.sort((a,b) => a.distance - b.distance));
+  const [currOutlets, setOutlets] = useState(laundryCtx.outlets.filter(outlet => outlet.courier === 'yes'));
+
+  const courierOutlets = laundryCtx.outlets.filter(outlet => outlet.courier === 'yes')
 
   const [sortNearby, setNearby] = useState(false);
   const [nearbyChip, setNearbyChip] = useState<string>("");
@@ -56,21 +59,6 @@ const NearbyOutlets: React.FC = () => {
     }
   }
 
-  
-  const sortBestHandler = () =>{
-    
-    if(sortBest===false){
-      setOutlets(currOutlets.sort((a,b) => b.rating - a.rating));
-      setBest(!sortBest);
-      setBestChip("primary");
-    }
-    if(sortBest===true){
-      setOutlets(currOutlets.sort((a,b) => a.distance - b.distance));
-      setBest(!sortBest);
-      setBestChip("");
-    }
-  }
-
   const sortNearbyHandler = () =>{
     
     if(sortNearby===false){
@@ -83,6 +71,20 @@ const NearbyOutlets: React.FC = () => {
       setOutlets(currOutlets.sort((a,b) => a.id.localeCompare(b.id)));
       setNearby(!sortNearby);
       setNearbyChip("");
+    }
+  }
+
+  const sortBestHandler = () =>{
+    
+    if(sortBest===false){
+      setOutlets(currOutlets.sort((a,b) => b.rating - a.rating));
+      setBest(!sortBest);
+      setBestChip("primary");
+    }
+    if(sortBest===true){
+      setOutlets(currOutlets.sort((a,b) => a.id.localeCompare(b.id)));
+      setBest(!sortBest);
+      setBestChip("");
     }
   }
 
@@ -118,10 +120,7 @@ const [chosenOutlet, setChosenOutlet] = useState<{
 
   useEffect(()=>{
     laundryCtx.updateDistance(laundryCtx.location.latitude, laundryCtx.location.longitude);
-    const searchResult = laundryCtx.outlets.filter(outlet => outlet.name.includes(searchText));
-    if(filterCourier == true){
-      setOutlets(searchResult.filter(outlet => outlet.courier === 'yes'));
-    } else
+    const searchResult = courierOutlets.filter(outlet => outlet.name.includes(searchText));
     setOutlets(searchResult);
   },[searchText]);
 
@@ -186,7 +185,7 @@ const [chosenOutlet, setChosenOutlet] = useState<{
         <IonButtons slot='start'>
             <IonBackButton defaultHref='/navi/home'></IonBackButton>
           </IonButtons>
-          <IonTitle>Nearby Outlets</IonTitle>
+          <IonTitle>Outlets</IonTitle>
         </IonToolbar>
       </IonHeader>
       <IonContent>
@@ -224,8 +223,8 @@ const [chosenOutlet, setChosenOutlet] = useState<{
           </IonRow>
           <IonRow>
             <IonCol>
-              <IonChip onClick={filterCourierHandler} color={courierChip}>
-                <IonLabel>Courier
+              <IonChip onClick={sortNearbyHandler} color={nearbyChip}>
+                <IonLabel>Nearby
                 </IonLabel>
               </IonChip>
               <IonChip onClick={sortBestHandler} color={bestChip}>
@@ -279,4 +278,4 @@ const [chosenOutlet, setChosenOutlet] = useState<{
   );
 };
 
-export default NearbyOutlets;
+export default CourierOutlets;
