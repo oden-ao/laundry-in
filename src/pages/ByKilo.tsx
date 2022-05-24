@@ -11,12 +11,8 @@ import { format, parseISO, getDate, getMonth, getYear, formatISO, add, parse } f
 import { useHistory } from 'react-router-dom';
 
 import shirt from '../images/SVG/Shirt.svg'
-import blazer from '../images/SVG/Blazer.svg'
-import courier from '../images/SVG/delivery.svg'
 
-import shoe from '../images/SVG/kilos.svg'
-import bag from '../images/SVG/bags.svg'
-import doll from '../images/SVG/doll.svg'
+import kilo from '../images/SVG/scale.svg'
 
 import LaundryContext from '../data/laundry-context';
 import './ByUnit.css';
@@ -417,7 +413,9 @@ const closeOrderHandler = () => {
         <IonGrid>
           <IonCard>
             
-            <IonCardHeader className='ion-text-center'><b>Kilos</b></IonCardHeader>
+            <IonCardHeader className='ion-text-center'><b>Kilos</b><br/><br/>
+            <img src={kilo}></img></IonCardHeader>
+            
             <IonCardContent className='ion-text-center'>
             
             <IonCol className='ion-text-center' size='1.5'>

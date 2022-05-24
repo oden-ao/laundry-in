@@ -21,6 +21,9 @@ import courier from '../images/SVG/delivery.svg'
 import header from '../images/SVG/Header.svg'
 import LaundryContext from '../data/laundry-context';
 
+import laundry2 from '../images/laundry2.jpg'
+import laundry3 from '../images/laundry3.png'
+
 import './Home.css'
 
 const Home: React.FC = () => {
@@ -213,13 +216,13 @@ const Home: React.FC = () => {
                         <SwiperSlide>
                             <IonCard className='promo'>
                               <img src={laundry1}/>
-                            <div className='overlay'><b>Free Delivery</b><br/>15 May-15 June 2022</div>
+                            <div className='overlay'><b>Free Delivery</b><br/>01 March - 15 March 2022</div>
                             </IonCard>
                         </SwiperSlide>
                         <SwiperSlide>
                         <IonCard className='promo'>
-                              <img src={laundry1}/>
-                            <div className='overlay'><b>Free Delivery</b><br/>15 May-15 June 2022</div>
+                              <img src={laundry2}/>
+                            <div className='overlay'><b>10% Discount</b><br/>11 April - 25 April 2022</div>
                             </IonCard>
                         </SwiperSlide>
                         </Swiper>

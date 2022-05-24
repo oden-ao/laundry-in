@@ -7,6 +7,11 @@ import { debug } from 'console';
 import Outlets from '../pages/Outlets';
 import { getDistance } from 'geolib';
 
+import laundry2 from '../images/laundry2.jpg'
+import laundry3 from '../images/laundry3.png'
+import laundry4 from '../images/laundry4.jpg'
+
+
 const LaundryContextProvider: React.FC = props => {
 
     const [location, setLocation] = useState<Location>({latitude: 0, longitude: 0});
@@ -31,7 +36,7 @@ const LaundryContextProvider: React.FC = props => {
                     { latitude: location.latitude, longitude: location.longitude },
                     { latitude: -6.914744 , longitude: 107.613144 })>30000?10000: 5000
             },
-            { imageSrc: laundry1,
+            { imageSrc: laundry2,
                 name:'LaundryIn Cipinang Indah',
                 location:'Jakarta',
                 address: 'Jl. Raya Kalimalang No.18, RW.3, Pd. Bambu, Kec. Duren Sawit, Kota Jakarta Timur, Daerah Khusus Ibukota Jakarta 13430',
@@ -49,7 +54,7 @@ const LaundryContextProvider: React.FC = props => {
                         { latitude: location.latitude, longitude: location.longitude },
                         { latitude:  -6.23907926272 , longitude: 106.894317954 })>30000?10000: 5000
                 },
-                { imageSrc: laundry1,
+                { imageSrc: laundry3,
                     name:'LaundryIn Buaran',
                     location:'Jakarta',
                     address: 'Jl. Raden Inten II No.8, RT.8/RW.14, Klender, Kec. Duren Sawit, Kota Jakarta Timur, Daerah Khusus Ibukota Jakarta 13470',
@@ -67,7 +72,7 @@ const LaundryContextProvider: React.FC = props => {
                         { latitude: location.latitude, longitude: location.longitude },
                         { latitude: -6.217846 , longitude: 106.924173 })>30000?10000: 5000
                     },
-                    { imageSrc: laundry1,
+                    { imageSrc: laundry4,
                         name:'LaundryIn Scientia',
                         location:'Tangerang',
                         address: 'Curug Sangereng, Kelapa Dua, Tangerang Regency, Banten 15810',

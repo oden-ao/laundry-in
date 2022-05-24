@@ -185,7 +185,7 @@ const [chosenOutlet, setChosenOutlet] = useState<{
         <IonButtons slot='start'>
             <IonBackButton defaultHref='/navi/home'></IonBackButton>
           </IonButtons>
-          <IonTitle>Outlets</IonTitle>
+          <IonTitle>Courier Outlets</IonTitle>
         </IonToolbar>
       </IonHeader>
       <IonContent>

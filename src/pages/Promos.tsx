@@ -6,6 +6,8 @@ import {GoogleMap, InfoWindow, LoadScript, Marker} from '@react-google-maps/api'
 import { useContext, useEffect, useState } from 'react';
 import LaundryContext from '../data/laundry-context';
 import laundry1 from '../images/laundry1.jpg'
+import laundry2 from '../images/laundry2.jpg'
+import laundry3 from '../images/laundry3.png'
 
 const Promos: React.FC = () => {
   const laundryCtx = useContext(LaundryContext);
@@ -35,6 +37,34 @@ const Promos: React.FC = () => {
                   </IonCardContent>
 
               </IonCard>
+
+
+              <IonCard>
+              <img src={laundry2}/>
+                  <IonCardHeader>
+                    <IonCardTitle>
+                      10% Discount
+                    </IonCardTitle>
+                  </IonCardHeader>
+                  <IonCardContent>
+                    Promo Period 11 April - 25 April 2022
+                  </IonCardContent>
+
+              </IonCard>
+
+              <IonCard>
+              <img src={laundry3}/>
+                  <IonCardHeader>
+                    <IonCardTitle>
+                      35% Discount For Other Type
+                    </IonCardTitle>
+                  </IonCardHeader>
+                  <IonCardContent>
+                    Promo Period 11 April - 25 April 2022
+                  </IonCardContent>
+
+              </IonCard>
+
             </IonCol>
           </IonRow>
         </IonGrid>

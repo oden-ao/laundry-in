@@ -154,6 +154,7 @@ const [chosenOutlet, setChosenOutlet] = useState<{
         <IonRow>
           <IonCol>
             {chosenOutlet?.distance.toLocaleString()} meters away | {chosenOutlet?.location}<br/>
+            {chosenOutlet?.address}<br/>
             {chosenOutlet?.hours}
             <br/><br/>
                   
