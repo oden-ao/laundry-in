@@ -28,13 +28,6 @@ const Page: React.FC = () => {
 
     return (
         <IonPage>
-            {/* <IonHeader>
-                <IonToolbar>
-                <IonButtons slot='start'>
-          </IonButtons>
-                    <IonTitle>LaundryIn</IonTitle>
-                </IonToolbar>
-            </IonHeader> */}
             <IonLoading message="Please wait.." duration={0} isOpen={busy} />
             <IonContent className="ion-text-center" color='primary'>
             <IonGrid className='headerlogin'>
@@ -56,13 +49,13 @@ const Page: React.FC = () => {
                     placeholder="Password" 
                     onIonChange={(e: any) => setPassword(e.target.value)} 
                     />
-                    <IonButton onClick={login}>Login</IonButton>
+                    <IonButton expand='block' onClick={login}>Log in</IonButton>
                     </IonList>
                     </IonCardContent>
                     </IonCard>
 
                     <p>
-                        Don't Have an Acccount? <Link to="/register" className='white'>Sign Up</Link>
+                        Don't have an acccount? <Link to="/register" className='white'>Sign Up</Link>
                     </p>
             
                     <IonGrid className='footer'>

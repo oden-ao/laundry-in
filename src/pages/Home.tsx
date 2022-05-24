@@ -5,6 +5,11 @@ import { giftOutline, location, notificationsOutline, chevronDownOutline, locati
 import {Geolocation} from '@capacitor/geolocation';
 import {GoogleMap, InfoWindow, LoadScript, Marker} from '@react-google-maps/api';
 
+import firebase from 'firebase/compat/app';
+import 'firebase/compat/auth';
+import 'firebase/compat/firestore';
+import {getAuth, onAuthStateChanged} from "firebase/auth";
+
 import { Swiper, SwiperSlide} from 'swiper/react';
 import { Navigation, Pagination, Scrollbar, A11y } from 'swiper';
 import 'swiper/css';
@@ -33,6 +38,16 @@ const Home: React.FC = () => {
     height: '150px',
     margin:'auto'
   };
+
+ const auth = getAuth();
+ const user = auth.currentUser;
+if (user !== null) {
+  const displayName = user.displayName;
+  const email = user.email;
+  const photoURL = user.photoURL;
+  const emailVerified = user.emailVerified;
+  const uid = user.uid;
+}
   
   const laundryCtx = useContext(LaundryContext);
   const [locName, setlocname] = useState<string>("default");
@@ -75,7 +90,7 @@ const Home: React.FC = () => {
             <h1>LaundryIn</h1>
             </div>
               <IonText className='white'>Hola! Welcome back,</IonText><br/>
-              <div className='user'>Boba Fett</div>
+              <div className='user'>{user?.displayName}</div>
             </IonCol>
             <IonCol>
             <div className='topbtn'>

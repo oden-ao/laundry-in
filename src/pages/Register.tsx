@@ -70,13 +70,13 @@ const Register: React.FC = () => {
                     onIonChange={(e: any) => setEmail(e.target.value)}/>
                     <IonInput placeholder="No. Telp" 
                     onIonChange={(e: any) => setHP(e.target.value)}/>
-                    <IonButton onClick={register}>Daftar</IonButton>
+                    <IonButton expand="block" onClick={register}>Sign up</IonButton>
                     </IonList>
                     </IonCardContent>
                     </IonCard>
 
                     <p>
-                        Already Have an Account? <Link to="/login" className='white'>Sign In</Link>
+                        Already have an account? <Link to="/login" className='white'>Sign In</Link>
                     </p>
                     
                     <IonGrid className='footer'>
