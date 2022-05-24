@@ -1,0 +1,105 @@
+.overlay {
+    position: absolute;
+    bottom: 0;
+    background: rgb(0, 0, 0);
+    background: rgba(0, 0, 0, 0.5); /* Black see-through */
+    color: #f1f1f1;
+    width: 100%;
+    opacity:1;
+    color: white;
+    font-size: 20px;
+    padding: 20px;
+    text-align: center;
+  }
+
+.promo {
+  height: 200px;
+  max-width: 100%;
+}
+
+.header{
+  background: url(../images/SVG/Header.svg) no-repeat;
+  background-size: 100% 300px;
+  background-position: top -30px center;
+  width: auto;
+  margin: auto;
+}
+
+.headerpage{
+    background: url(../images/SVG/Header1.svg) no-repeat;
+    background-size: 100% 300px;
+    background-position: top -30px center;
+    width: auto;
+    height: 300px;
+    margin: auto;
+  }
+
+.headerlogin{
+    background: url(../images/SVG/headerlogin.svg) no-repeat;
+    background-size: 50% 300px;
+    background-position: top 0px center;
+    width: auto;
+    height: 300px;
+    margin: auto;
+  }
+
+.headerregist{
+    background: url(../images/SVG/headerregist.svg) no-repeat;
+    background-size: 50% 300px;
+    background-position: top 0px center;
+    width: auto;
+    height: 300px;
+    margin: auto;
+  }
+
+.footer{
+    background: url(../images/SVG/footer.svg) no-repeat;
+    background-size: 100% 300px;
+    background-position: top 0px center;
+    width: auto;
+    height: 300px;
+    margin: auto;
+  }
+
+.translucent{
+  --background-color: transparent !important;
+  --ion-color-base: transparent !important;
+}
+
+.user{
+  font-size: x-large;
+  color: white;
+}
+
+.topbtn{
+  top: -10px;
+  right: -10px;
+  position: absolute;
+  --padding-start: 0;
+   --padding-end: 0;
+   --padding-top: 0;
+   --padding-bottom: 0;
+}
+
+.locbtn{
+  top: 0;
+  right: 0;
+  position: absolute;
+}
+
+.title{
+  top: -10px;
+  left: inherit;
+  position: relative;
+  font-family: 'Lora' !important;
+  color: white;
+}
+
+@font-face {   
+  font-family: 'Lora';
+  src: url('../fonts/Lora-SemiBold.ttf');
+}
+
+.white{
+  color: rgb(255, 255, 255);
+}
