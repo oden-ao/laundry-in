@@ -6,7 +6,6 @@ import footer from '../images/SVG/footer.svg'
 import {Link} from 'react-router-dom'
 import { loginUser } from '../firebaseconfig'
 import './Login.css'
-import { toast } from '../toast';
 import { useHistory } from 'react-router';
 
 const Page: React.FC = () => {
@@ -29,22 +28,22 @@ const Page: React.FC = () => {
 
     return (
         <IonPage>
-            <IonHeader>
+            {/* <IonHeader>
                 <IonToolbar>
                 <IonButtons slot='start'>
           </IonButtons>
                     <IonTitle>LaundryIn</IonTitle>
                 </IonToolbar>
-            </IonHeader>
+            </IonHeader> */}
             <IonLoading message="Please wait.." duration={0} isOpen={busy} />
-            <IonContent className="ion-text-center">
+            <IonContent className="ion-text-center" color='primary'>
             <IonGrid className='headerlogin'>
         
-        <IonRow>
+        {/* <IonRow>
         <IonCol size-sm='8' offset-sm='3' size-md="6" offset-md="3">
         
         </IonCol>
-        </IonRow>
+        </IonRow> */}
           </IonGrid>
           <IonCard>
           <IonCardContent>
@@ -63,15 +62,10 @@ const Page: React.FC = () => {
                     </IonCard>
 
                     <p>
-                        Don't Have an Acccount? <Link to="/register">SignUp</Link>
+                        Don't Have an Acccount? <Link to="/register" className='white'>Sign Up</Link>
                     </p>
-                
+            
                     <IonGrid className='footer'>
-        
-        <IonRow>
-        <IonCol size-sm='8' offset-sm='3' size-md="6" offset-md="3">
-        </IonCol>
-        </IonRow>
           </IonGrid>
                 
             </IonContent>

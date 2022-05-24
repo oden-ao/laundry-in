@@ -5,7 +5,6 @@ import headerregist from '../images/SVG/headerregist.svg'
 import footer from '../images/SVG/footer.svg'
 import './Login.css'
 import {Link} from 'react-router-dom'
-import { toast } from '../toast';
 import { registerUser } from '../firebaseconfig'
 
 const Register: React.FC = () => {
@@ -35,16 +34,16 @@ const Register: React.FC = () => {
 
     return (
         <IonPage>
-            <IonHeader>
+            {/* <IonHeader>
                 <IonToolbar>
                 <IonButtons slot='start'>
             <IonBackButton defaultHref='page'></IonBackButton>
           </IonButtons>
                     <IonTitle>LaundryIn</IonTitle>
                 </IonToolbar>
-            </IonHeader>
+            </IonHeader> */}
             <IonLoading message="Registering" duration={0} isOpen={busy} />
-            <IonContent className="ion-text-center">
+            <IonContent className="ion-text-center" color='primary'>
             <IonGrid className='headerregist'>
         
         <IonRow>
@@ -77,15 +76,10 @@ const Register: React.FC = () => {
                     </IonCard>
 
                     <p>
-                        Already Have an Account? <Link to="/login">Sign In</Link>
+                        Already Have an Account? <Link to="/login" className='white'>Sign In</Link>
                     </p>
                     
                     <IonGrid className='footer'>
-        
-        <IonRow>
-        <IonCol size-sm='8' offset-sm='2' size-md="6" offset-md="3">
-        </IonCol>
-        </IonRow>
           </IonGrid>
                 </IonContent>
             

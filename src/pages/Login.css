@@ -36,7 +36,7 @@
 
 .headerlogin{
     background: url(../images/SVG/headerlogin.svg) no-repeat;
-    background-size: 50% 300px;
+    background-size: 100%;
     background-position: top 0px center;
     width: auto;
     height: 300px;
@@ -45,7 +45,7 @@
 
 .headerregist{
     background: url(../images/SVG/headerregist.svg) no-repeat;
-    background-size: 50% 300px;
+    background-size: 100%;
     background-position: top 0px center;
     width: auto;
     height: 300px;
@@ -54,10 +54,10 @@
 
 .footer{
     background: url(../images/SVG/footer.svg) no-repeat;
-    background-size: 100% 300px;
-    background-position: top 0px center;
+    background-size: 100%;
+    background-position: bottom 0px center;
     width: auto;
-    height: 300px;
+    height: 350px;
     margin: auto;
   }
 
