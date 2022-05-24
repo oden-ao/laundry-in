@@ -62,32 +62,59 @@ const signOut = () => {
 }
 
 const insertHandler = async() => {
-  const storageRef = ref(storage, fileName);
-  uploadBytes(storageRef, selectedFile as Blob).then((snapshot:UploadResult) => {
-      console.log('upload file success');
-      getDownloadURL(ref(storage, fileName)).then((url:string)=>{
-        confirmEditHandler(url);
-      })
-
-  })
+  if(fileName.length >= 1){
+    const storageRef = ref(storage, fileName);
+    uploadBytes(storageRef, selectedFile as Blob).then((snapshot:UploadResult) => {
+        console.log('upload file success');
+        getDownloadURL(ref(storage, fileName)).then((url:string)=>{
+          confirmEditHandler(url);
+        })
+  
+    })
+  }
+  else{
+    editNameHandler();
+  }
 };
 
 const confirmEditHandler = (url: string) =>{
   const enteredName = nameRef.current!.value;
   if(!enteredName) return;
+
+
+    updateProfile(user!, {
+      displayName: enteredName.toString(), photoURL: url
+    }).then(() => {
+      setIsEditing(false);
+      alert('Profile updated!')
+      // Profile updated!
+      // ...
+    }).catch((error) => {
+      setIsEditing(false);
+      alert('Error updating profile')
+      // An error occurred
+      // ...
+    });
+  
+}
+
+const editNameHandler = () => {
+  const enteredName = nameRef.current!.value;
+  if(!enteredName) return;
+
   updateProfile(user!, {
-    displayName: enteredName.toString(), photoURL: url
+    displayName: enteredName.toString()
   }).then(() => {
     setIsEditing(false);
+    alert('Profile updated!')
     // Profile updated!
     // ...
   }).catch((error) => {
     setIsEditing(false);
+    alert('Error updating profile')
     // An error occurred
     // ...
   });
-
-  
 }
 
   return (
@@ -116,13 +143,16 @@ const confirmEditHandler = (url: string) =>{
               <IonCol>
               <br/>
           <IonItem>
-            <IonLabel>Display Name</IonLabel>
+            <IonLabel><b>Display Name</b></IonLabel>
             <IonInput type='text' ref={nameRef} value={user?.displayName}></IonInput>
           </IonItem>
           <br/>
-          <input type="file" onChange={fileChangeHandler}/>
-          
-        
+              </IonCol>
+            </IonRow>
+            <IonRow className='ion-text-center'>
+              <IonCol>
+              <IonLabel><b>Profile Picture</b>
+              </IonLabel><input type="file" onChange={fileChangeHandler}/><br/>
               </IonCol>
             </IonRow>
           </IonGrid>
@@ -155,7 +185,7 @@ const confirmEditHandler = (url: string) =>{
               </IonCol>
               <IonCol size='auto'>
                 <h1>{user?.displayName?user?.displayName:"User"}</h1>
-                +621234567 <br/>
+                {user?.phoneNumber?user?.phoneNumber:"+62-123-456-78"} <br/>
                 {user?.email}
               </IonCol>
               
