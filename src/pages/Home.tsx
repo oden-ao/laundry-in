@@ -90,7 +90,7 @@ if (user !== null) {
             <h1>LaundryIn</h1>
             </div>
               <IonText className='white'>Hola! Welcome back,</IonText><br/>
-              <div className='user'>{user?.displayName}</div>
+              <div className='user'>{user?.displayName?user?.displayName:"User"}</div>
             </IonCol>
             <IonCol>
             <div className='topbtn'>

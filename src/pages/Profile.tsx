@@ -154,7 +154,7 @@ const confirmEditHandler = (url: string) =>{
                 <IonAvatar><img src={user?.photoURL?user.photoURL:avatar1}/></IonAvatar>
               </IonCol>
               <IonCol size='auto'>
-                <h1>{user?.displayName}</h1>
+                <h1>{user?.displayName?user?.displayName:"User"}</h1>
                 +621234567 <br/>
                 {user?.email}
               </IonCol>

@@ -6,6 +6,7 @@ import footer from '../images/SVG/footer.svg'
 import './Login.css'
 import {Link} from 'react-router-dom'
 import { registerUser } from '../firebaseconfig'
+import { useHistory } from 'react-router';
 
 const Register: React.FC = () => {
    const [username, setUsername] = useState('')
@@ -13,21 +14,24 @@ const Register: React.FC = () => {
    const [cpassword, setCPassword] = useState('')
    const [email, setEmail] = useState('')
    const [HP, setHP] = useState('')
+   const history = useHistory()
 
    const[busy, setBusy] = useState<boolean>(false)
+   
 
    async function register() {
     setBusy(true)
     if (password !== cpassword) {
-        alert('Password not Match')
+        alert('Password does not match')
     }
     if (username.trim() === '' || password.trim() === ''){
-        alert('Fill the blank')  
+        alert('Fill the blanks')  
     }
 
     const res = await registerUser (username, password)
     if (res){
         alert('Successfully Registered')
+        history.replace('/navi/home')
     }
     setBusy(false)
    }
