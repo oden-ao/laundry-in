@@ -5,6 +5,8 @@ import { Switch } from 'react-router';
 import Outlets from './pages/Outlets';
 import Login from './pages/Login';
 import Register from './pages/Register';
+import Page from './pages/Page'
+
 
 
 
@@ -51,7 +53,7 @@ return(
     <Route path="/unit"  component={ByUnit}/>
     <Redirect exact from="/" to ="/navi/home" />
     
-    <Route path="/" component={Login} exact />
+    <Route path="/" component={Page} exact />
         <Route path="/Login" component={Login} exact />
         <Route path="/Register" component={Register} exact />
       </IonRouterOutlet>
