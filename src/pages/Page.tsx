@@ -24,11 +24,11 @@ const Page: React.FC = () => {
             
             <IonContent className="ion-text-center">
            
-                <IonGrid className='footer'>
+                <IonGrid className='onboardingheader'>
                     
         
         <IonRow>
-        <IonCol size-sm='8' offset-sm='3' size-md="6" offset-md="3">
+        <IonCol>
         </IonCol>
        
         </IonRow>
