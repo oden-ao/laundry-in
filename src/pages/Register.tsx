@@ -5,7 +5,6 @@ import headerregist from '../images/SVG/headerregist.svg'
 import footer from '../images/SVG/footer.svg'
 import './Login.css'
 import {Link} from 'react-router-dom'
-import { toast } from '../toast';
 import { registerUser } from '../firebaseconfig'
 
 const Register: React.FC = () => {

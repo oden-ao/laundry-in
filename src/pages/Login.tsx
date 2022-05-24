@@ -6,7 +6,6 @@ import footer from '../images/SVG/footer.svg'
 import {Link} from 'react-router-dom'
 import { loginUser } from '../firebaseconfig'
 import './Login.css'
-import { toast } from '../toast';
 import { useHistory } from 'react-router';
 
 const Page: React.FC = () => {
