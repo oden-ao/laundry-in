@@ -1,4 +1,16 @@
-
+.overlay1 {
+    position: absolute;
+    bottom: 0;
+    background: rgb(255, 255, 255);
+    background: rgb(255, 255, 255); /* Black see-through */
+    color: #f1f1f1;
+    width: 100%;
+    opacity:1;
+    color: rgb(100, 163, 171);
+    font-size: 20px;
+    padding: 20px;
+    text-align: center;
+  }
 
 .kotak1 {
   height: 600px;
@@ -12,4 +24,20 @@
   width: auto;
   height: 150px;
   margin: auto;
+}
+
+.translucent{
+  --background-color: transparent !important;
+  --ion-color-base: transparent !important;
+}
+
+
+
+@font-face {   
+  font-family: 'Lora';
+  src: url('../fonts/Lora-SemiBold.ttf');
+}
+
+.white{
+  color: white;
 }

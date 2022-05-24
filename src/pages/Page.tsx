@@ -28,7 +28,7 @@ const Page: React.FC = () => {
                     
         
         <IonRow>
-        <IonCol>
+        <IonCol size-sm='8' offset-sm='3' size-md="6" offset-md="3">
         </IonCol>
        
         </IonRow>
