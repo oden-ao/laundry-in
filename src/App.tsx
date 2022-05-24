@@ -3,6 +3,12 @@ import { IonApp, IonRouterOutlet, setupIonicReact } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
 import { Switch } from 'react-router';
 import Outlets from './pages/Outlets';
+import Page from './pages/Page';
+import Login from './pages/Login';
+import Register from './pages/Register';
+
+
+
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';
@@ -29,10 +35,6 @@ import ByUnit from './pages/ByUnit';
 import NavigationBar from './pages/NavigationBar';
 // import LaundryContext from './data/laundry-context';
 import LaundryContextProvider from './data/LaundryContextProvider';
-import ByOther from './pages/ByOther';
-import ByKilo from './pages/ByKilo';
-import NearbyOutlets from './pages/Nearby';
-import CourierOutlets from './pages/Courier';
 
 setupIonicReact();
 
@@ -43,18 +45,16 @@ return(
     <IonReactRouter>
     <LaundryContextProvider>
       <IonRouterOutlet>
+      
     <Route path="/navi" component={NavigationBar}/>
     <Route path="/outlets" component={Outlets}/>
     <Route path="/location" component={ChooseLoc}/>
     <Route path="/unit"  component={ByUnit}/>
-    <Route path="/other"  component={ByOther}/>
-    <Route path="/kilo"  component={ByKilo}/>
-    <Route path="/nearby"  component={NearbyOutlets}/>
-    <Route path="/courier"  component={CourierOutlets}/>
-
     <Redirect exact from="/" to ="/navi/home" />
     
-      <Route path="navi/home" component={NavigationBar}/>
+    <Route path="/" component={Login} exact />
+        <Route path="/Login" component={Login} exact />
+        <Route path="/Register" component={Register} exact />
       </IonRouterOutlet>
       </LaundryContextProvider>
     </IonReactRouter>
