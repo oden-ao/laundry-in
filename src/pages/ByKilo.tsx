@@ -10,6 +10,12 @@ import { Rating } from 'react-simple-star-rating'
 import { format, parseISO, getDate, getMonth, getYear, formatISO, add, parse } from 'date-fns';
 import { useHistory } from 'react-router-dom';
 
+import {collection, addDoc, getDocs, doc, collectionGroup, query, where, getFirestore} from "firebase/firestore";
+import {getAuth, onAuthStateChanged, updateProfile} from "firebase/auth";
+import firebase from 'firebase/compat/app';
+import 'firebase/compat/auth';
+import 'firebase/compat/firestore';
+
 import shirt from '../images/SVG/Shirt.svg'
 
 import kilo from '../images/SVG/scale.svg'
@@ -20,6 +26,19 @@ import './ByUnit.css';
 const ByKilo: React.FC = () => {
 
   const laundryCtx = useContext(LaundryContext);
+//firebase
+const db = getFirestore();
+  
+
+const auth = getAuth();
+const user = auth.currentUser;
+if (user !== null) {
+ const displayName = user.displayName;
+ const email = user.email;
+ const photoURL = user.photoURL;
+ const emailVerified = user.emailVerified;
+ const uid = user.uid;
+}
 
   //map bs
   const containerStyle = {
@@ -155,6 +174,31 @@ const closeOrderHandler = () => {
     setToastMessage('Order placed');
     history.length > 0 ? history.goBack(): history.replace('/navi/home');  
    }
+
+   //firebase
+   const addOrder = async () => {
+    const querySnapshot = await getDocs(query(collection(db, user!.uid.toString())));
+   try{
+     const docRef = await addDoc(collection(db, user!.uid.toString()),{
+           num: querySnapshot.size + 1,
+           type: "Kilos",
+           date: formatDate(currDate),
+           pickupdate: formatDate(selectedPickupDate),
+           deliverydate: formatDate(selectedDeliveryDate),
+           price: total,
+           delivery: chosenOutlet!.fee,
+           total: total + chosenOutlet!.fee,
+           address: (String(laundryCtx.location.latitude), String(laundryCtx.location.longitude))
+     });
+     console.log("Document written with ID: ", docRef.id)
+     setConfirmScreen(false);
+   setToastMessage('Order placed');
+   } catch (e) {
+     console.error("Error adding document: ", e);
+   }
+   
+   history.length > 0 ? history.goBack(): history.replace('/navi/home');
+ };
 
 
 
@@ -341,7 +385,7 @@ const closeOrderHandler = () => {
         </IonTitle>
         </IonToolbar>:
         <IonToolbar>
-        <IonButton onClick={placeOrderHandler} expand='block'>Place Order</IonButton>
+        <IonButton onClick={addOrder} expand='block'>Place Order</IonButton>
         </IonToolbar>
         }
 

@@ -10,6 +10,12 @@ import { Rating } from 'react-simple-star-rating'
 import { format, parseISO, getDate, getMonth, getYear, formatISO, add, parse } from 'date-fns';
 import { useHistory } from 'react-router-dom';
 
+import {collection, addDoc, getDocs, doc, collectionGroup, query, where, getFirestore} from "firebase/firestore";
+import {getAuth, onAuthStateChanged, updateProfile} from "firebase/auth";
+import firebase from 'firebase/compat/app';
+import 'firebase/compat/auth';
+import 'firebase/compat/firestore';
+
 import shirt from '../images/SVG/Shirt.svg'
 import pantsimg from '../images/SVG/Pants.svg'
 import blazer from '../images/SVG/Blazer.svg'
@@ -21,6 +27,20 @@ import './ByUnit.css';
 const ByUnit: React.FC = () => {
 
   const laundryCtx = useContext(LaundryContext);
+
+  //firebase
+  const db = getFirestore();
+  
+
+  const auth = getAuth();
+  const user = auth.currentUser;
+ if (user !== null) {
+   const displayName = user.displayName;
+   const email = user.email;
+   const photoURL = user.photoURL;
+   const emailVerified = user.emailVerified;
+   const uid = user.uid;
+ }
 
   //map bs
   const containerStyle = {
@@ -102,6 +122,7 @@ const ByUnit: React.FC = () => {
     let mounted = true;
     if (mounted){
       laundryCtx.updateDistance(laundryCtx.location.latitude, laundryCtx.location.longitude);
+      
       // getCurrentPosition();
     }
     return () =>{ mounted = false;  
@@ -174,7 +195,7 @@ const closeOrderHandler = () => {
   const total = (shirts * 15000) + (pants * 20000) + (blazers * 30000);
   const quantity = shirts + pants + blazers;
 
-
+  //context
   const placeOrderHandler = () =>{
     laundryCtx.addOrder(laundryCtx.orders.length + 1, "Unit", formatDate(currDate) ,formatDate(selectedPickupDate), formatDate(selectedDeliveryDate), total, chosenOutlet!.fee, total + chosenOutlet!.fee, (String(laundryCtx.location.latitude), String(laundryCtx.location.longitude)));
     setConfirmScreen(false);
@@ -183,6 +204,31 @@ const closeOrderHandler = () => {
     // history.push('/navi/home');
     // history.goBack();
    }
+
+   //firebase
+   const addOrder = async () => {
+     const querySnapshot = await getDocs(query(collection(db, user!.uid.toString())));
+    try{
+      const docRef = await addDoc(collection(db, user!.uid.toString()),{
+            num: querySnapshot.size + 1,
+            type: "Unit",
+            date: formatDate(currDate),
+            pickupdate: formatDate(selectedPickupDate),
+            deliverydate: formatDate(selectedDeliveryDate),
+            price: total,
+            delivery: chosenOutlet!.fee,
+            total: total + chosenOutlet!.fee,
+            address: (String(laundryCtx.location.latitude), String(laundryCtx.location.longitude))
+      });
+      console.log("Document written with ID: ", docRef.id)
+      setConfirmScreen(false);
+    setToastMessage('Order placed');
+    } catch (e) {
+      console.error("Error adding document: ", e);
+    }
+    
+    history.length > 0 ? history.goBack(): history.replace('/navi/home');
+  };
 
 
 
@@ -388,7 +434,7 @@ const closeOrderHandler = () => {
         </IonTitle>
         </IonToolbar>:
         <IonToolbar>
-        <IonButton onClick={placeOrderHandler} expand='block'>Place Order</IonButton>
+        <IonButton onClick={addOrder} expand='block'>Place Order</IonButton>
         </IonToolbar>
         }
 

@@ -8,9 +8,45 @@ import LaundryContext from '../data/laundry-context';
 import './Orders.css';
 import kiloan from '../images/SVG/kiloan.svg'
 
+import {collection, addDoc, getDocs, doc, collectionGroup, query, where, getFirestore} from "firebase/firestore";
+import {getAuth, onAuthStateChanged, updateProfile} from "firebase/auth";
+import firebase from 'firebase/compat/app';
+import 'firebase/compat/auth';
+import 'firebase/compat/firestore';
+
 const Orders: React.FC = () => {
+
+  
   const laundryCtx = useContext(LaundryContext);
-  const [locName, setlocname] = useState<string>("default");
+  const [orders, setOrders] = useState<Array<any>>([]);
+  const db = getFirestore();
+
+  //firebase
+  const auth = getAuth();
+  const user = auth.currentUser;
+ if (user !== null) {
+   const displayName = user.displayName;
+   const email = user.email;
+   const photoURL = user.photoURL;
+   const emailVerified = user.emailVerified;
+   const uid = user.uid;
+ }
+
+
+  useEffect(() => {
+    async function getData() {
+      const userorders = query(collection(db, user!.uid.toString()));
+      const querySnapshot = await getDocs(userorders);
+      console.log('querySnapshot:', querySnapshot);
+      setOrders(querySnapshot.docs.map((doc) =>({...doc.data(), id: doc.id})));
+      
+      querySnapshot.forEach((doc) => {
+        console.log(`${doc.id} => ${doc.data()}`);
+        console.log('doc:', doc);
+      });
+    }
+      getData();
+  }, []);
 
   return (
     <IonPage>
@@ -23,7 +59,7 @@ const Orders: React.FC = () => {
 
         <IonGrid>
           
-          {laundryCtx.orders.length ===0?
+          {orders.length ===0?
           <IonRow className='ion-text-center'>
           <IonCol>
             <br/>
@@ -35,7 +71,7 @@ const Orders: React.FC = () => {
           </IonRow>:
           <IonRow>
           <IonCol size-sm='8' offset-sm='2' size-md="6" offset-md="3">
-          {laundryCtx.orders.sort((a,b) => b.num - a.num).map(order => (
+          {orders.sort((a,b) => b.num - a.num).map(order => (
             <IonCard key={order.num}>
               <div className='status'>
               <IonButton fill='clear'><IonIcon icon={chatboxEllipsesOutline} slot='icon-only'></IonIcon></IonButton>
