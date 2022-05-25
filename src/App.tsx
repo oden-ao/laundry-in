@@ -33,6 +33,8 @@ import { useContext, useEffect } from 'react';
 import ChooseLoc from './pages/ChooseLoc';
 import Home from './pages/Home';
 import ByUnit from './pages/ByUnit';
+import ByKilo from './pages/ByKilo';
+import ByOther from './pages/ByOther';
 import NavigationBar from './pages/NavigationBar';
 // import LaundryContext from './data/laundry-context';
 import LaundryContextProvider from './data/LaundryContextProvider';
@@ -51,6 +53,8 @@ return(
     <Route path="/outlets" component={Outlets}/>
     <Route path="/location" component={ChooseLoc}/>
     <Route path="/unit"  component={ByUnit}/>
+    <Route path="/other"  component={ByOther}/>
+    <Route path="/kilo"  component={ByKilo}/>
     <Redirect exact from="/" to ="/navi/home" />
     
     <Route path="/" component={Page} exact />

@@ -1,6 +1,6 @@
 .overlay1 {
     position: absolute;
-    bottom: 0;
+    bottom: 20px;
     background: rgb(255, 255, 255);
     background: rgb(255, 255, 255); /* Black see-through */
     color: #f1f1f1;
@@ -13,7 +13,7 @@
   }
 
 .kotak1 {
-  height: 600px;
+  height: 400px;
   max-width: auto;
 }
 
@@ -31,7 +31,11 @@
   --ion-color-base: transparent !important;
 }
 
-
+.bottombtn{
+  position: relative;
+  margin: auto;
+  bottom: 0;
+}
 
 @font-face {   
   font-family: 'Lora';
