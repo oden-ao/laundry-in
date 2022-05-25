@@ -32,10 +32,12 @@ const Orders: React.FC = () => {
    const uid = user.uid;
  }
 
+ const userdb = user?.uid;
+
 
   useEffect(() => {
     async function getData() {
-      const userorders = query(collection(db, user!.uid.toString()));
+      const userorders = query(collection(db, userdb!.toString()));
       const querySnapshot = await getDocs(userorders);
       console.log('querySnapshot:', querySnapshot);
       setOrders(querySnapshot.docs.map((doc) =>({...doc.data(), id: doc.id})));
