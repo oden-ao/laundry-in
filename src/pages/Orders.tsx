@@ -37,18 +37,18 @@ const Orders: React.FC = () => {
 
   useEffect(() => {
     async function getData() {
-      const userorders = query(collection(db, userdb!.toString()));
+      const userorders = query(collection(db, userdb!.toString(), "orders", "orders"));
       const querySnapshot = await getDocs(userorders);
-      console.log('querySnapshot:', querySnapshot);
+      // console.log('querySnapshot:', querySnapshot);
       setOrders(querySnapshot.docs.map((doc) =>({...doc.data(), id: doc.id})));
       
-      querySnapshot.forEach((doc) => {
-        console.log(`${doc.id} => ${doc.data()}`);
-        console.log('doc:', doc);
-      });
+      // querySnapshot.forEach((doc) => {
+      //   console.log(`${doc.id} => ${doc.data()}`);
+      //   console.log('doc:', doc);
+      // });
     }
       getData();
-  }, []);
+  }, [orders]);
 
   return (
     <IonPage>

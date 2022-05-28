@@ -212,9 +212,9 @@ const closeOrderHandler = () => {
 
     //firebase
     const addOrder = async () => {
-      const querySnapshot = await getDocs(query(collection(db, user!.uid.toString())));
+      const querySnapshot = await getDocs(query(collection(db, user!.uid.toString(), "orders", "orders")));
       try{
-        const docRef = await addDoc(collection(db, user!.uid.toString()),{
+        const docRef = await addDoc(collection(db, user!.uid.toString(), "orders", "orders"),{
               num: querySnapshot.size + 1,
               type: "Other",
               date: formatDate(currDate),
