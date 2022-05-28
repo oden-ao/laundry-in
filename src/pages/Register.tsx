@@ -5,15 +5,11 @@ import headerregist from '../images/SVG/headerregist.svg'
 import footer from '../images/SVG/footer.svg'
 import './Login.css'
 import {Link} from 'react-router-dom'
-import { addUserInfo, registerUser } from '../firebaseconfig'
+import { registerUser } from '../firebaseconfig'
 import { useHistory } from 'react-router';
-
-
+import {Toast} from '@capacitor/toast'
 
 const Register: React.FC = () => {
-
-   
-
    const [username, setUsername] = useState('')
    const [password, setPassword] = useState('')
    const [cpassword, setCPassword] = useState('')
@@ -27,16 +23,21 @@ const Register: React.FC = () => {
    async function register() {
     setBusy(true)
     if (password !== cpassword) {
-        alert('Password does not match')
+        await Toast.show({
+            text: 'Password does not match',
+          });
     }
     if (username.trim() === '' || password.trim() === ''){
-        alert('Fill the blanks')  
+        await Toast.show({
+            text: 'Fill the blanks',
+          });
     }
 
     const res = await registerUser (username, password)
     if (res){
-        addUserInfo(email, HP);
-        alert('Successfully Registered')
+        await Toast.show({
+            text: 'Successfully Registered',
+          });
         history.replace('/navi/home')
     }
     setBusy(false)

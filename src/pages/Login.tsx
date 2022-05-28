@@ -7,6 +7,7 @@ import {Link} from 'react-router-dom'
 import { loginUser } from '../firebaseconfig'
 import './Login.css'
 import { useHistory } from 'react-router';
+import {Toast} from '@capacitor/toast'
 
 const Page: React.FC = () => {
    const [username, setUsername] = useState('')
@@ -18,13 +19,22 @@ const Page: React.FC = () => {
        setBusy(true)
        const res = await loginUser(username, password)
        if(!res) {
-           alert('Wrong Credentials')
+        await Toast.show({
+            text: 'Wrong Credentials',
+          });
        } else {
            history.replace('/navi/home')
-           alert('Successful Login')
+           {
+            await Toast.show({
+                text: 'Successful Login',
+              });
+            }
+           
        }
        setBusy(false)
    }
+
+  
 
     return (
         <IonPage>
