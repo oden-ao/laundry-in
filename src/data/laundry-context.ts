@@ -12,6 +12,7 @@ export interface Outlet {
     id: string;
     courier: string;
     rating: number;
+    ratings: number;
     distance: number;
     fee: number;
 }
@@ -40,13 +41,15 @@ const LaundryContext = React.createContext<{
     chooseLocation: (latitude: number, longitude: number) => void;
     addOrder: (num: number, type: string, date: string, pickupdate: string, deliverydate: string, price: number, delivery: number, total: number, address: string) => void;
     updateDistance: (loclat: number, loclng: number) => void;
+    getRating: () => void;
 }>({
     outlets: [],
     orders: [],
     location: {latitude: 0, longitude: 0},
     chooseLocation: () => {},
     addOrder: () => {},
-    updateDistance: () => {}
+    updateDistance: () => {},
+    getRating: () => {}
 });
 
 export default LaundryContext;

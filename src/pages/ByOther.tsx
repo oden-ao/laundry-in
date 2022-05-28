@@ -125,6 +125,7 @@ const ByOther: React.FC = () => {
   useEffect(()=>{
     let mounted = true;
     if (mounted){
+      laundryCtx.getRating();
       laundryCtx.updateDistance(laundryCtx.location.latitude, laundryCtx.location.longitude);
       // getCurrentPosition();
     }

@@ -7,6 +7,12 @@ import { useContext, useEffect, useState } from 'react';
 import { convertDistance, getDistance } from 'geolib';
 import { Rating } from 'react-simple-star-rating'
 
+import {collection, addDoc, getDocs, getDoc, doc, collectionGroup, query, where, getFirestore, updateDoc} from "firebase/firestore";
+import {getAuth, onAuthStateChanged, updateProfile} from "firebase/auth";
+import firebase from 'firebase/compat/app';
+import 'firebase/compat/auth';
+import 'firebase/compat/firestore';
+
 import courier from '../images/SVG/delivery.svg'
 
 import LaundryContext from '../data/laundry-context';
@@ -117,6 +123,7 @@ const [chosenOutlet, setChosenOutlet] = useState<{
 
 
   useEffect(()=>{
+    laundryCtx.getRating();
     laundryCtx.updateDistance(laundryCtx.location.latitude, laundryCtx.location.longitude);
     const searchResult = laundryCtx.outlets.filter(outlet => outlet.name.includes(searchText));
     if(filterCourier == true){
@@ -125,9 +132,70 @@ const [chosenOutlet, setChosenOutlet] = useState<{
     setOutlets(searchResult);
   },[searchText]);
 
+  //firebase
+const addRating = async () => {
+  const db = getFirestore();
+  const ratingRef = doc(db, "outlets", chosenOutlet!.id)
+  const docSnap = await getDoc(ratingRef);
+  const currRating = docSnap.get("rating");
+  const currRatings = docSnap.get("ratings");
+  await updateDoc(ratingRef, {
+    rating: (currRating*currRatings + rating)/(currRatings + 1),
+    ratings: currRatings + 1})
+
+  setReview(false);
+}
+
+const [rating, setRating] = useState(0)
+const [review, setReview] = useState(false);
+
+const reviewHandler= () => {
+  setReview(true);
+}
+
+const cancelReviewHandler= () => {
+  setReview(false);
+}
+
+// Catch Rating value
+const handleRating = (rate: number) => {
+  setRating(rate)
+}
+
 
   return (
     <IonPage>
+
+<IonModal isOpen={review}>
+      <IonHeader>
+        <IonToolbar color='primary'>
+          <IonButtons slot='start'>
+          <IonButton fill="clear" onClick={cancelReviewHandler}>
+          <IonIcon icon={close} slot="icon-only"></IonIcon>
+          </IonButton>
+          </IonButtons>
+          <IonTitle>Rate This Outlet</IonTitle>
+        </IonToolbar>
+      </IonHeader>
+      <IonGrid>
+        <br/>
+        <IonRow >
+          <IonCol >
+            <b>How would you rate your experience with this outlet?</b>
+          </IonCol>
+        </IonRow>
+        <IonRow className='ion-text-center'>
+          <IonCol>
+          <Rating onClick={handleRating}
+        ratingValue={0}></Rating>
+          </IonCol>
+        </IonRow>
+      </IonGrid>
+        
+
+        <IonButton onClick={addRating} expand='block'>Submit rating</IonButton>
+      </IonModal>
+
 
       <IonModal isOpen={selectOutlet}>
       <IonHeader>
@@ -176,7 +244,7 @@ const [chosenOutlet, setChosenOutlet] = useState<{
       </IonContent>
       <IonFooter>
                    <IonToolbar>
-                   <IonButton expand='block'>Contact on WhatsApp</IonButton>
+                   <IonButton onClick={reviewHandler} expand='block'>Rate this outlet</IonButton>
                    </IonToolbar>
       </IonFooter>
       </IonModal>

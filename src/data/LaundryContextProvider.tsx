@@ -6,6 +6,7 @@ import LaundryContext, {Location, Order, Outlet} from './laundry-context';
 import { debug } from 'console';
 import Outlets from '../pages/Outlets';
 import { getDistance } from 'geolib';
+import { doc, getDoc, getFirestore } from "firebase/firestore";
 
 import laundry2 from '../images/laundry2.jpg'
 import laundry3 from '../images/laundry3.png'
@@ -29,6 +30,7 @@ const LaundryContextProvider: React.FC = props => {
             id: 'o1',
             courier: 'no',
             rating: 70,
+            ratings: 100,
             distance: getDistance(
                 { latitude: location.latitude, longitude: location.longitude },
                 { latitude: -6.914744 , longitude: 107.613144 }),
@@ -47,6 +49,7 @@ const LaundryContextProvider: React.FC = props => {
                 id: 'o2',
                 courier: 'yes',
                 rating: 80,
+                ratings: 100,
                 distance: getDistance(
                     { latitude: location.latitude, longitude: location.longitude },
                     { latitude:  -6.23907926272 , longitude: 106.894317954 }),
@@ -65,6 +68,7 @@ const LaundryContextProvider: React.FC = props => {
                     id: 'o3',
                     courier: 'yes',
                     rating: 75,
+                    ratings: 100,
                     distance: getDistance(
                         { latitude: location.latitude, longitude: location.longitude },
                         { latitude: -6.217846 , longitude: 106.924173 }),
@@ -83,6 +87,7 @@ const LaundryContextProvider: React.FC = props => {
                         id: 'o4',
                         courier: 'yes',
                         rating: 80,
+                        ratings: 100,
                         distance: getDistance(
                             { latitude: location.latitude, longitude: location.longitude },
                             { latitude: -6.25621257514 , longitude: 106.61558605 }),
@@ -133,9 +138,26 @@ const LaundryContextProvider: React.FC = props => {
         });
     }
 
+    const getRating = () => {
+        outlets.forEach(async function (outlet) {
+                const db = getFirestore();
+                const docRef = doc(db, "outlets", outlet.id);
+                const docSnap = await getDoc(docRef);
+                const ratings = docSnap.get("ratings");
+                outlet.ratings = ratings;
+            });
+            outlets.forEach(async function (outlet) {
+                const db = getFirestore();
+                const docRef = doc(db, "outlets", outlet.id);
+                const docSnap = await getDoc(docRef);
+                const rating = docSnap.get("rating");
+                outlet.rating = rating;
+            });
+    }
+
 
 return(
-    <LaundryContext.Provider value={{location, outlets, orders, chooseLocation, addOrder, updateDistance}}>
+    <LaundryContext.Provider value={{location, outlets, orders, chooseLocation, addOrder, updateDistance, getRating}}>
         {props.children}
     </LaundryContext.Provider>
 );

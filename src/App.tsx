@@ -38,6 +38,8 @@ import ByOther from './pages/ByOther';
 import NavigationBar from './pages/NavigationBar';
 // import LaundryContext from './data/laundry-context';
 import LaundryContextProvider from './data/LaundryContextProvider';
+import NearbyOutlets from './pages/Nearby';
+import CourierOutlets from './pages/Courier';
 
 setupIonicReact();
 
@@ -51,6 +53,8 @@ return(
       
     <Route path="/navi" component={NavigationBar}/>
     <Route path="/outlets" component={Outlets}/>
+    <Route path="/nearby" component={NearbyOutlets}/>
+    <Route path="/courier" component={CourierOutlets}/>
     <Route path="/location" component={ChooseLoc}/>
     <Route path="/unit"  component={ByUnit}/>
     <Route path="/other"  component={ByOther}/>

@@ -237,6 +237,7 @@ updatePassword(user!, newPassword.toString()).then(() => {
         </IonToolbar>
       </IonHeader>
       <IonGrid>
+        <br/>
         <IonRow>
           <IonCol>
           <IonItem>
@@ -248,7 +249,7 @@ updatePassword(user!, newPassword.toString()).then(() => {
       </IonGrid>
       <IonFooter>
             <IonToolbar>
-            <IonButton onClick={confirmUpdatePasswordHandler} expand="block">Update Profile</IonButton>
+            <IonButton onClick={confirmUpdatePasswordHandler} expand="block">Update Password</IonButton>
             </IonToolbar>
           </IonFooter>
       </IonModal>
