@@ -241,13 +241,13 @@ if (user !== null) {
         onSwiper={(swiper) => console.log(swiper)}
         onSlideChange={() => console.log('slide change')}>
                         <SwiperSlide>
-                            <IonCard className='promo'>
+                            <IonCard className='promo' routerLink='/navi/promos'>
                               <img src={laundry1}/>
                             <div className='overlay'><b>Free Delivery</b><br/>01 March - 15 March 2022</div>
                             </IonCard>
                         </SwiperSlide>
                         <SwiperSlide>
-                        <IonCard className='promo'>
+                        <IonCard className='promo' routerLink='/navi/promos'>
                               <img src={laundry2}/>
                             <div className='overlay'><b>10% Discount</b><br/>11 April - 25 April 2022</div>
                             </IonCard>
