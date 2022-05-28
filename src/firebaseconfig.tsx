@@ -59,7 +59,22 @@ export async function registerUser(username: string, password: string){
       }
     };
 
+    const addPromosDoc = async () => {
+      const db = getFirestore();
+      try{
+        const docRef = await setDoc(doc(db, user!.uid.toString(), "promos"),{
+            freeDelivery: 3,
+            tenDiscount: 5,
+            otherDiscount: 1
+        });
+        console.log("Document written")
+      } catch (e) {
+        console.error("Error adding document: ", e);
+      }
+    };
+
     addCoinsDoc();
+    addPromosDoc();
 
     return true
     

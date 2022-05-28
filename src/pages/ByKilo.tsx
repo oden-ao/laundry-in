@@ -101,11 +101,71 @@ if (user !== null) {
     return format(parseISO(value), 'MMM dd yyyy kk:mm');
   };
 
+  //promos
+
+  const [freeDelivery, setFreeDelivery] = useState(3);
+  const [tenDiscount, setTenDiscount] = useState(3);
+  const [otherDiscount, setOtherDiscount] = useState(3);
+
+  const [chosenPromo, setChosenPromo] = useState(false);
+  const [promoDesc, setPromoDesc] = useState('No promos chosen.');
+  const [promoCut, setPromoCut] = useState(0);
+
+  const [openPromos, setOpenPromos] = useState(false);
+
+  const openPromosHandler = () =>{
+    setOpenPromos(true);
+  }
+
+  const closePromosHandler = () =>{
+    setOpenPromos(false);
+  }
+
+  async function getPromos() {
+    const db = getFirestore();
+    const docRef = doc(db, user!.uid.toString(), "promos");
+    const docSnap = await getDoc(docRef);
+    const freeDelivery = docSnap.get("freeDelivery");
+    const tenDiscount = docSnap.get("tenDiscount");
+    setFreeDelivery(freeDelivery);
+    setTenDiscount(tenDiscount);
+  }
+
+  const chooseFreeDelivery = () =>{
+    setChosenPromo(true);
+    setPromoDesc("Free Delivery");
+    setPromoCut(chosenOutlet!.fee);
+    setOpenPromos(false);
+  }
+
+  const chooseTenDiscount = () =>{
+    setChosenPromo(true);
+    setPromoDesc("10% Discount");
+    setPromoCut(total * 10/100);
+    setOpenPromos(false);
+  }
+
+  const cancelPromo = () =>{
+    setChosenPromo(false);
+    setPromoDesc("No Promos Chosen.");
+    setPromoCut(0);
+  }
+
+  const promoFree = async (promo:string) => {
+    const db = getFirestore();
+    const promoRef = doc(db, user!.uid, "promos")
+    const docSnap = await getDoc(promoRef);
+    const currPromo = docSnap.get(promo);
+    await updateDoc(promoRef, {
+     coins: currPromo - 1 })
+  }
+
   useEffect(()=>{
     let mounted = true;
     if (mounted){
       laundryCtx.getRating();
       laundryCtx.updateDistance(laundryCtx.location.latitude, laundryCtx.location.longitude);
+      getPromos();
     }
     return () =>{ mounted = false;  
     }
@@ -178,6 +238,12 @@ const closeOrderHandler = () => {
 
    //firebase
    const addOrder = async () => {
+    if(promoDesc == "Free Delivery"){
+      promoFree("freeDelivery");
+    }
+    else if(promoDesc == "10% Discount"){
+      promoFree("tenDiscount");
+    }
     const querySnapshot = await getDocs(query(collection(db, user!.uid.toString(), "orders", "orders")));
    try{
      const docRef = await addDoc(collection(db, user!.uid.toString(), "orders", "orders"),{
@@ -188,7 +254,8 @@ const closeOrderHandler = () => {
            deliverydate: formatDate(selectedDeliveryDate),
            price: total,
            delivery: chosenOutlet!.fee,
-           total: total + chosenOutlet!.fee,
+           discount: promoCut,
+           total: total + chosenOutlet!.fee - promoCut,
            address: (String(laundryCtx.location.latitude), String(laundryCtx.location.longitude))
      });
      addCoinHistory(total);
@@ -254,6 +321,48 @@ const addCoinHistory = async (total: number) => {
           </IonCardContent>
           
         </IonCard>
+      </IonModal>
+
+      <IonModal isOpen={openPromos}>
+      <IonHeader>
+        <IonToolbar color='primary'>
+          <IonButtons slot='start'>
+          <IonButton fill="clear" onClick={closePromosHandler}>
+          <IonIcon icon={close} slot="icon-only"></IonIcon>
+          </IonButton>
+          </IonButtons>
+          <IonTitle>Choose A Promo</IonTitle>
+        </IonToolbar>
+      </IonHeader>
+      <IonList>
+        {freeDelivery > 0?
+        <IonItem onClick={chooseFreeDelivery}>
+        <IonLabel>
+          <b>Free Delivery</b><br/>
+          No minimum order<br/>
+          Usages left: {freeDelivery}
+        </IonLabel>
+      </IonItem>:<IonLabel></IonLabel>
+        }
+
+        {tenDiscount > 0 && total >= 50000?
+        <IonItem onClick={chooseTenDiscount}>
+          <IonLabel>
+          <b>10% Discount</b><br/>
+          Minimum order of 50.000 IDR<br/>
+          Usages left: {tenDiscount}
+        </IonLabel>
+        </IonItem>:
+        <IonItem color='danger'>
+        <IonLabel>
+        <b>10% Discount</b><br/>
+        Minimum order of 50.000 IDR<br/>
+        Usages left: {tenDiscount}<br/>
+        <i>Order minimum not met!</i>
+      </IonLabel>
+      </IonItem>}
+        
+      </IonList>
       </IonModal>
 
       <IonModal isOpen={confirmScreen}>
@@ -349,6 +458,28 @@ const addCoinHistory = async (total: number) => {
               </IonDatetime>
           </IonModal>
 
+          {chosenOutlet?<IonCard>
+            <IonCardContent>
+              <IonCardTitle>
+                Promo
+              </IonCardTitle>
+              {freeDelivery > 0 && tenDiscount > 0?
+                <div>
+                  <IonLabel>{promoDesc}</IonLabel><br/>
+                  <IonCol>
+                  <IonButton onClick={openPromosHandler}>Change Promo</IonButton>
+                  </IonCol>
+                  {chosenPromo?<IonCol><IonButton color='danger' onClick={cancelPromo}>
+                  Remove Promo
+                </IonButton></IonCol>:""}
+                </div>
+                :
+                <IonLabel>No promos available for this order.</IonLabel>}
+                
+            </IonCardContent>
+          </IonCard>:
+          <IonLabel></IonLabel>}
+
               <IonCard>
                 <IonCardContent>
                 <IonCardTitle>
@@ -374,13 +505,24 @@ const addCoinHistory = async (total: number) => {
                       {chosenOutlet?.fee.toLocaleString()} IDR
                     </IonCol>
                   </IonRow>
+
+                  {chosenPromo?
+                   <IonRow>
+                   <IonCol>
+                     Discount
+                   </IonCol>
+                   <IonCol>
+                     -{promoCut.toLocaleString()} IDR
+                   </IonCol>
+                 </IonRow>:""
+                  }
                     
                   <IonRow>
                     <IonCol>
                       Total
                     </IonCol>
                     <IonCol>
-                      {(total + chosenOutlet!.fee).toLocaleString()} IDR
+                      {(total + chosenOutlet!.fee - promoCut).toLocaleString()} IDR
                     </IonCol>
                   </IonRow>
                   </div>

@@ -211,7 +211,7 @@ useEffect(() => {
     getCoins();
     getInfo();
     getCoinHistory();
-}, [coins]);
+}, []);
 
 
 

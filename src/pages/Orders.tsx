@@ -48,7 +48,7 @@ const Orders: React.FC = () => {
       // });
     }
       getData();
-  }, [orders]);
+  }, []);
 
   return (
     <IonPage>
@@ -147,6 +147,16 @@ const Orders: React.FC = () => {
                   IDR {order.delivery.toLocaleString()}
                   </IonCol>
                 </IonRow>
+
+                {order.discount > 0?
+                <IonRow>
+                  <IonCol>
+                    Discount
+                  </IonCol>
+                  <IonCol className='ion-text-end'>
+                  - IDR {order.discount.toLocaleString()}
+                  </IonCol>
+                </IonRow>:""}
 
                 <IonRow>
                   <IonCol>
