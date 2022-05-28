@@ -10,7 +10,7 @@ import { Rating } from 'react-simple-star-rating'
 import { format, parseISO, getDate, getMonth, getYear, formatISO, add, parse } from 'date-fns';
 import { useHistory } from 'react-router-dom';
 
-import {collection, addDoc, getDocs, doc, collectionGroup, query, where, getFirestore} from "firebase/firestore";
+import {collection, addDoc, getDocs, updateDoc, getDoc, doc, collectionGroup, query, where, getFirestore} from "firebase/firestore";
 import {getAuth, onAuthStateChanged, updateProfile} from "firebase/auth";
 import firebase from 'firebase/compat/app';
 import 'firebase/compat/auth';
@@ -224,14 +224,32 @@ const closeOrderHandler = () => {
       console.log("Document written with ID: ", docRef.id)
       setConfirmScreen(false);
     setToastMessage('Order placed');
+    addCoins(total);
+    addCoinHistory(total);
     } catch (e) {
       console.error("Error adding document: ", e);
     }
-    
     history.length > 0 ? history.goBack(): history.replace('/navi/home');
   };
 
+  const addCoins = async (total: number) => {
+    const db = getFirestore();
+    const coinRef = doc(db, user!.uid, "coins")
+    const docSnap = await getDoc(coinRef);
+    const currCoins = docSnap.get("coins");
+    await updateDoc(coinRef, {
+     coins: currCoins + (total/1000) })
+  }
 
+  const addCoinHistory = async (total: number) => {
+    const db = getFirestore();
+    const querySnapshot = await getDocs(query(collection(db, user!.uid.toString(), "orders", "orders")));
+    const docRef = await addDoc(collection(db, user!.uid.toString(), "coins", "coinsHistory"),{
+      num: querySnapshot.size + 1,
+      date: formatDate(currDate),
+      coins: total/1000
+});
+  }
 
   return (
     <IonPage>
@@ -435,6 +453,8 @@ const closeOrderHandler = () => {
         </IonTitle>
         </IonToolbar>:
         <IonToolbar>
+          <IonCol className='ion-text-center'>You will earn <b>{total/1000} coins</b> from this order.</IonCol>
+          
         <IonButton onClick={addOrder} expand='block'>Place Order</IonButton>
         </IonToolbar>
         }

@@ -9,6 +9,7 @@ import firebase from 'firebase/compat/app';
 import 'firebase/compat/auth';
 import 'firebase/compat/firestore';
 import {getAuth, onAuthStateChanged} from "firebase/auth";
+import { getFirestore, doc, getDoc } from "firebase/firestore";
 
 import { Swiper, SwiperSlide} from 'swiper/react';
 import { Navigation, Pagination, Scrollbar, A11y } from 'swiper';
@@ -48,6 +49,7 @@ if (user !== null) {
   const emailVerified = user.emailVerified;
   const uid = user.uid;
 }
+
   
   const laundryCtx = useContext(LaundryContext);
   const [locName, setlocname] = useState<string>("default");
@@ -69,8 +71,18 @@ if (user !== null) {
     laundryCtx.chooseLocation(selectedLat, selectedLng);
   };
 
+  const [username, setUsername] = useState('User');
+
   useEffect(()=>{
     getCurrentPosition();
+    async function getInfo() {
+      const db = getFirestore();
+      const docRef = doc(db, user!.uid.toString(), "info");
+      const docSnap = await getDoc(docRef);
+      const username = docSnap.get("username");
+      setUsername(username);
+    }
+    getInfo();
   },[selectedLat, selectedLng]);
 
   return (
@@ -90,7 +102,7 @@ if (user !== null) {
             <h1>LaundryIn</h1>
             </div>
               <IonText className='white'>Hola! Welcome back,</IonText><br/>
-              <div className='user'>{user?.displayName?user?.displayName:"User"}</div>
+              <div className='user'>{user?.displayName?user?.displayName:username}</div>
             </IonCol>
             <IonCol>
             <div className='topbtn'>

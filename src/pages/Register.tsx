@@ -5,10 +5,15 @@ import headerregist from '../images/SVG/headerregist.svg'
 import footer from '../images/SVG/footer.svg'
 import './Login.css'
 import {Link} from 'react-router-dom'
-import { registerUser } from '../firebaseconfig'
+import { addUserInfo, registerUser } from '../firebaseconfig'
 import { useHistory } from 'react-router';
 
+
+
 const Register: React.FC = () => {
+
+   
+
    const [username, setUsername] = useState('')
    const [password, setPassword] = useState('')
    const [cpassword, setCPassword] = useState('')
@@ -30,6 +35,7 @@ const Register: React.FC = () => {
 
     const res = await registerUser (username, password)
     if (res){
+        addUserInfo(email, HP);
         alert('Successfully Registered')
         history.replace('/navi/home')
     }

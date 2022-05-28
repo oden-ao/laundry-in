@@ -1,7 +1,11 @@
 import firebase from 'firebase/compat/app';
+import {collection, addDoc, getDocs, doc, collectionGroup, query, where, getFirestore, setDoc} from "firebase/firestore";
+import {getAuth, onAuthStateChanged, updateProfile} from "firebase/auth";
 import 'firebase/compat/auth';
 import 'firebase/compat/firestore';
 require('firebase/auth')
+
+
 
 
 const config = {
@@ -36,9 +40,53 @@ export async function loginUser(username: string, password: string) {
 export async function registerUser(username: string, password: string){
   const email = `${username}@gmail.com`
   try {
-    const res = await firebase.auth().createUserWithEmailAndPassword 
-    (username, password)
+    const res = await firebase.auth().createUserWithEmailAndPassword(username, password)
     console.log(res)
+    const auth = getAuth();
+    const user = auth.currentUser;
+    
+
+    const addCoinsDoc = async () => {
+      const db = getFirestore();
+      try{
+        const docRef = await setDoc(doc(db, user!.uid.toString(), "coins"),{
+            coins: 0,
+            redeemedGift: false
+        });
+        console.log("Document written")
+      } catch (e) {
+        console.error("Error adding document: ", e);
+      }
+    };
+
+    addCoinsDoc();
+
+    return true
+    
+  } catch(error){
+    console.log(error)
+    return false
+  }
+}
+
+export async function addUserInfo(username: string, phoneNumber: string){
+  try {
+    const auth = getAuth();
+    const user = auth.currentUser;
+    
+
+
+      const db = getFirestore();
+      try{
+        const docRef = await setDoc(doc(db, user!.uid.toString(), "info"),{
+            username: username,
+            phoneNumber: phoneNumber
+        });
+        console.log("Document written")
+      } catch (e) {
+        console.error("Error adding document: ", e);
+      }
+
     return true
     
   } catch(error){

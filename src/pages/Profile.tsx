@@ -10,10 +10,14 @@ import { IonButton, IonAlert, IonRouterOutlet, IonCard, IonList, IonItem, IonAva
 import { giftOutline, location, notificationsOutline, chevronDownOutline, lockClosedOutline, createOutline, addOutline, listOutline, informationOutline, helpOutline, informationCircleOutline, helpCircleOutline, documentTextOutline, addCircle, wallet, close } from 'ionicons/icons';
 import {GoogleMap, InfoWindow, LoadScript, Marker} from '@react-google-maps/api';
 import { useContext, useEffect, useState, useRef } from 'react';
-import {collection, addDoc} from "firebase/firestore";
+import {collection, addDoc, query, getDoc, getDocs, doc} from "firebase/firestore";
 import LaundryContext from '../data/laundry-context';
 import avatar1 from '../images/avatar1.svg';
 import './Profile.css'
+
+import 'firebase/compat/auth';
+import 'firebase/compat/firestore';
+
 import {getAuth, onAuthStateChanged, updateProfile, updatePassword} from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 import {getDownloadURL, getStorage, ref, uploadBytes, UploadResult} from "firebase/storage";
@@ -21,6 +25,9 @@ import {getDownloadURL, getStorage, ref, uploadBytes, UploadResult} from "fireba
 const Profile: React.FC = () => {
   const laundryCtx = useContext(LaundryContext);
   const history = useHistory();
+
+
+
   const [isEditing, setIsEditing] = useState(false);
   const [startUpdatePassword, setIsUpdatingPassword] = useState(false);
   const [editingPassword, setIsEditingPassword] = useState(false);
@@ -159,6 +166,54 @@ updatePassword(user!, newPassword.toString()).then(() => {
 });
 }
 
+const [coins, setCoins] = useState(0);
+const[openCoins, setCoinHistory] = useState(false);
+const[username, setUsername] = useState('');
+const[phoneNum, setPhoneNum] = useState('');
+const [coinsHistoryList, setCoinsHistoryList] = useState<Array<any>>([]);
+
+const openCoinsHandler = () =>{
+  setCoinHistory(true);
+}
+const closeCoins = () =>{
+  setCoinHistory(false);
+}
+
+const userdb = user?.uid;
+useEffect(() => {
+  async function getCoins() {
+    const db = getFirestore();
+    const docRef = doc(db, userdb!.toString(), "coins");
+    const docSnap = await getDoc(docRef);
+    const coins = docSnap.get("coins");
+    setCoins(coins);
+  }
+  async function getInfo() {
+    const db = getFirestore();
+    const docRef = doc(db, userdb!.toString(), "info");
+    const docSnap = await getDoc(docRef);
+    const username = docSnap.get("username");
+    const phoneNum = docSnap.get("phoneNumber");
+    setUsername(username);
+    setPhoneNum(phoneNum);
+  }
+  async function getCoinHistory() {
+    const coinHistory = query(collection(db, userdb!.toString(), "coins", "coinsHistory"));
+    const querySnapshot = await getDocs(coinHistory);
+    // console.log('querySnapshot:', querySnapshot);
+    setCoinsHistoryList(querySnapshot.docs.map((doc) =>({...doc.data(), id: doc.id})));
+    console.log(coinsHistoryList);
+    // querySnapshot.forEach((doc) => {
+    //   console.log(`${doc.id} => ${doc.data()}`);
+    //   console.log('doc:', doc);
+    // });
+  }
+    getCoins();
+    getInfo();
+    getCoinHistory();
+}, [coins]);
+
+
 
   return (
     
@@ -183,6 +238,48 @@ updatePassword(user!, newPassword.toString()).then(() => {
             buttons={[
                 {text: 'Ok', role: 'confirm', handler: () => {setIsEditingPassword(false)}}
             ]}/>
+
+    <IonModal isOpen={openCoins}>
+    <IonHeader>
+            <IonToolbar color='primary'>
+              <IonButtons slot='start'>
+              <IonButton fill="clear" onClick={closeCoins}>
+              <IonIcon icon={close} slot="icon-only"></IonIcon>
+              </IonButton>
+              </IonButtons>
+              <IonTitle>Coin History</IonTitle>
+            </IonToolbar>
+          </IonHeader>
+          <IonContent>
+          {coinsHistoryList.length === 0?<IonGrid>
+            <br/>
+            <IonRow>
+              <IonCol className='ion-text-center'>
+                You haven't earned any coins!
+              </IonCol>
+            </IonRow>
+          </IonGrid>:
+          <IonGrid>
+            {coinsHistoryList.map(history=> (
+              <IonItem key={history.id}>
+                <IonLabel>
+                {history.date} <br/>
+                <b>Earned {history.coins} coins </b>
+                <br/>
+                {!history.num?"from Gift":
+                <div>from Order ID #{history.num}</div>
+                }
+                
+                </IonLabel>
+              </IonItem>
+            ))}
+          </IonGrid>
+          }
+          <IonList>
+          </IonList>
+          </IonContent>
+         
+    </IonModal>
 
 
       <IonModal isOpen={isEditing}>
@@ -273,8 +370,8 @@ updatePassword(user!, newPassword.toString()).then(() => {
                 <IonAvatar><img src={user?.photoURL?user.photoURL:avatar1}/></IonAvatar>
               </IonCol>
               <IonCol size='auto'>
-                <h1>{user?.displayName?user?.displayName:"User"}</h1>
-                {user?.phoneNumber?user?.phoneNumber:"+62-123-456-78"} <br/>
+                <h1>{user?.displayName?user?.displayName:username}</h1>
+                {user?.phoneNumber?user?.phoneNumber:phoneNum} <br/>
                 {user?.email}
               </IonCol>
               
@@ -287,15 +384,16 @@ updatePassword(user!, newPassword.toString()).then(() => {
           </IonCard>
 
           <IonCard color='primary'>
-            <div className='coinbtn'>
-            <IonButton className='btncolor' fill='clear'><IonIcon slot="icon-only" icon={addCircle}></IonIcon></IonButton>
-            <IonButton className='btncolor' fill='clear'><IonIcon slot="icon-only" icon={wallet}></IonIcon></IonButton>
-            </div>
+            
             <IonCardHeader>
               Your Coins
+              <div className='coinbtn'>
+            <IonButton className='btncolor' fill='clear'><IonIcon slot="icon-only" icon={addCircle}></IonIcon></IonButton>
+            <IonButton onClick={openCoinsHandler} className='btncolor' fill='clear'><IonIcon slot="icon-only" icon={wallet}></IonIcon></IonButton>
+            </div>
             </IonCardHeader>
             <IonCardContent>
-                <IonCardTitle>20,000 coins</IonCardTitle>
+                <IonCardTitle>{coins} Coins</IonCardTitle>
             </IonCardContent>
           </IonCard>
 
