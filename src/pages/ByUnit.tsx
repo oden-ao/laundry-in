@@ -173,8 +173,20 @@ const ByUnit: React.FC = () => {
     const promoRef = doc(db, user!.uid, "promos")
     const docSnap = await getDoc(promoRef);
     const currPromo = docSnap.get(promo);
-    const data = {promo: currPromo-1}
-    await updateDoc(promoRef, data)
+    if (promo === "otherDiscount"){
+      const data = {otherDiscount: currPromo-1}
+      await updateDoc(promoRef, data)
+    }
+    else if (promo === "tenDiscount"){
+      const data = {tenDiscount: currPromo-1}
+      await updateDoc(promoRef, data)
+    }
+    else if (promo === "freeDelivery"){
+      const data = {freeDelivery: currPromo-1}
+      await updateDoc(promoRef, data)
+    }
+    
+    
   }
 
 
