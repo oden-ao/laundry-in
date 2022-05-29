@@ -47,7 +47,7 @@ const Page: React.FC = () => {
                             </IonCard>
                         </SwiperSlide>
                         <SwiperSlide>
-                        <IonCard className='kotak1'>
+                        <IonCard className='kotak1' routerLink='/login'>
                               <img src={headerboard3}/>
                             <div className='overlay1'><b>Guaranteed</b><br/>Safe and reliable We can guarantee that.</div>
                             </IonCard>
