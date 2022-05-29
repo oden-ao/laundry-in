@@ -25,15 +25,10 @@ const Page: React.FC = () => {
             <IonContent className="ion-text-center">
            
                 <IonGrid className='onboardingheader'>
-                    
-        
-        <IonRow>
-        <IonCol size-sm='8' offset-sm='3' size-md="6" offset-md="3">
-        </IonCol>
-       
-        </IonRow>
           </IonGrid>
-        <IonCol>
+          <IonGrid>
+              <IonRow>
+              <IonCol size-sm='8' offset-sm='3' size-md="6" offset-md="3">
             <Swiper modules={[Navigation, Pagination]}
         spaceBetween={0}
         slidesPerView={1}
@@ -67,6 +62,9 @@ const Page: React.FC = () => {
                         
             </IonCol>
             
+              </IonRow>
+          </IonGrid>
+        
        
             
             </IonContent>

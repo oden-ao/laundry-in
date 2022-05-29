@@ -1,8 +1,8 @@
 import { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: 'com.ode.ionic.memories',
-  appName: 'Memories',
+  appId: 'com.hanova.ionic.laundryin',
+  appName: 'LaundryIn',
   webDir: 'build',
   bundledWebRuntime: false
 };

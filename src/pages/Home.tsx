@@ -167,7 +167,7 @@ if (user !== null) {
         {redeemed == false?<IonItem onClick={redeemGiftHandler}>
             <IonLabel>
               <b>Free 100 Coins</b><br/>
-                Welcome to LaundryIn! <br/>
+                Welcome to LaundryIn!<br/>
                 Click this gift to redeem your free 100 coins!
                 <br/>
                 

@@ -45,3 +45,8 @@
 .white{
   color: white;
 }
+
+.swiper-pagination-bullet {
+  position: relative;
+  bottom: 50px !important;
+}
