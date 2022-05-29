@@ -1,7 +1,7 @@
 import { isPlatform } from '@ionic/core';
 import { Redirect, Route } from 'react-router-dom';
-import { IonButton, IonRouterOutlet, IonCard, IonList, IonItem, IonAvatar, IonCardTitle, IonCardHeader, IonLabel, IonRow, IonCol, IonGrid, IonContent, IonButtons, IonFab, IonFabButton, IonHeader, IonIcon, IonPage, IonTitle, IonToolbar, IonBackButton, IonSearchbar, IonChip, IonItemDivider, IonCardContent, IonText, IonCardSubtitle } from '@ionic/react';
-import { giftOutline, location, notificationsOutline, chevronDownOutline, locationOutline, locationSharp, gift, notifications } from 'ionicons/icons';
+import { IonButton, IonModal, IonRouterOutlet, IonCard, IonToast, IonList, IonItem, IonAvatar, IonCardTitle, IonCardHeader, IonLabel, IonRow, IonCol, IonGrid, IonContent, IonButtons, IonFab, IonFabButton, IonHeader, IonIcon, IonPage, IonTitle, IonToolbar, IonBackButton, IonSearchbar, IonChip, IonItemDivider, IonCardContent, IonText, IonCardSubtitle } from '@ionic/react';
+import { giftOutline, location, notificationsOutline, chevronDownOutline, locationOutline, locationSharp, gift, notifications, close } from 'ionicons/icons';
 import {Geolocation} from '@capacitor/geolocation';
 import {GoogleMap, InfoWindow, LoadScript, Marker} from '@react-google-maps/api';
 
@@ -9,7 +9,7 @@ import firebase from 'firebase/compat/app';
 import 'firebase/compat/auth';
 import 'firebase/compat/firestore';
 import {getAuth, onAuthStateChanged} from "firebase/auth";
-import { getFirestore, doc, getDoc } from "firebase/firestore";
+import { getFirestore, doc, getDoc, updateDoc } from "firebase/firestore";
 
 import { Swiper, SwiperSlide} from 'swiper/react';
 import { Navigation, Pagination, Scrollbar, A11y } from 'swiper';
@@ -52,12 +52,37 @@ if (user !== null) {
 
   
   const laundryCtx = useContext(LaundryContext);
-  const [locName, setlocname] = useState<string>("default");
 
   //map functionality
   const [selectedLat, setLat] = useState<number>(0);
   const [selectedLng, setLng] = useState<number>(0);
 
+  const [redeemed, setRedeemed] = useState(false);
+
+  async function getRedeem() {
+    const db = getFirestore();
+    const docRef = doc(db, user!.uid.toString(), "coins");
+    const docSnap = await getDoc(docRef);
+    const redeemStatus = docSnap.get("redeemedGift");
+    setRedeemed(redeemStatus);
+  }
+
+  async function updateRedeem() {
+    const db = getFirestore();
+    const docRef = doc(db, user!.uid.toString(), "coins");
+    const docSnap = await getDoc(docRef);
+    const redeemStatus = docSnap.get("redeemedGift");
+    await updateDoc(docRef, {
+      redeemedGift: true })
+  }
+
+  async function getInfo() {
+    const db = getFirestore();
+    const docRef = doc(db, user!.uid.toString(), "info");
+    const docSnap = await getDoc(docRef);
+    const username = docSnap.get("username");
+    setUsername(username);
+  }
 
   const getCurrentPosition = async () => {
     const coordinates = await Geolocation.getCurrentPosition({enableHighAccuracy:true});
@@ -75,18 +100,117 @@ if (user !== null) {
 
   useEffect(()=>{
     getCurrentPosition();
-    async function getInfo() {
-      const db = getFirestore();
-      const docRef = doc(db, user!.uid.toString(), "info");
-      const docSnap = await getDoc(docRef);
-      const username = docSnap.get("username");
-      setUsername(username);
-    }
+    
     getInfo();
+    getRedeem();
   },[selectedLat, selectedLng]);
+
+  const [openGift, setOpenGift] = useState(false);
+
+  const openGiftHandler = () =>{
+    setOpenGift(true);
+  }
+
+  const closeGiftHandler = () =>{
+    setOpenGift(false);
+  }
+
+  const [toastMessage, setToastMessage] = useState('');
+  const redeem = async () => {
+    const db = getFirestore();
+    const promoRef = doc(db, user!.uid, "coins")
+    const docSnap = await getDoc(promoRef);
+    const currPromo = docSnap.get("coins");
+    await updateDoc(promoRef, {
+     coins: currPromo + 100 })
+  }
+
+  const redeemGiftHandler = () =>{
+    setRedeemed(true);
+    setOpenGift(false);
+    updateRedeem();
+    redeem();
+    setOpenGift(false);
+    setToastMessage("Gift redeemed!");
+  }
+
+  const [openNotif, setOpenNotif] = useState(false);
+  const openNotifHandler = () =>{
+    setOpenNotif(true);
+  }
+
+  const closeNotifHandler = () =>{
+    setOpenNotif(false);
+  }
 
   return (
     <IonPage>
+
+<IonToast isOpen={!!toastMessage}
+                    message={toastMessage}
+                    duration={1500}
+                    onDidDismiss={() => {setToastMessage('')}}/>
+
+<IonModal isOpen={openGift}>
+      <IonHeader>
+        <IonToolbar color='primary'>
+          <IonButtons slot='start'>
+          <IonButton fill="clear" onClick={closeGiftHandler}>
+          <IonIcon icon={close} slot="icon-only"></IonIcon>
+          </IonButton>
+          </IonButtons>
+          <IonTitle>Gifts</IonTitle>
+        </IonToolbar>
+      </IonHeader>
+      <IonContent>
+      <IonGrid>
+        {redeemed == false?<IonItem onClick={redeemGiftHandler}>
+            <IonLabel>
+              <b>Free 100 Coins</b><br/>
+                Welcome to LaundryIn! <br/>
+                Click this gift to redeem your free 100 coins!
+                <br/>
+                
+            </IonLabel>
+          </IonItem>:
+          <IonRow>
+           <IonCol className='ion-text-center'>
+             <br/>
+             You have no gifts waiting to be redeemed.
+           </IonCol>
+         </IonRow>
+          }
+          
+      </IonGrid>
+      
+      </IonContent>
+      </IonModal>
+
+      <IonModal isOpen={openNotif}>
+      <IonHeader>
+        <IonToolbar color='primary'>
+          <IonButtons slot='start'>
+          <IonButton fill="clear" onClick={closeNotifHandler}>
+          <IonIcon icon={close} slot="icon-only"></IonIcon>
+          </IonButton>
+          </IonButtons>
+          <IonTitle>Notifications</IonTitle>
+        </IonToolbar>
+      </IonHeader>
+      <IonContent>
+      <IonGrid>
+          <IonRow>
+           <IonCol className='ion-text-center'>
+             <br/>
+             You have no notifications.
+           </IonCol>
+         </IonRow>
+          
+      </IonGrid>
+      
+      </IonContent>
+      </IonModal>
+
       <IonContent>
       
               <IonGrid className='header'>
@@ -106,8 +230,8 @@ if (user !== null) {
             </IonCol>
             <IonCol>
             <div className='topbtn'>
-              <IonButton fill="clear"><IonIcon className='white' slot='icon-only' icon={gift}></IonIcon></IonButton>
-              <IonButton fill="clear"><IonIcon className='white' slot='icon-only' icon={notifications}></IonIcon></IonButton>
+              <IonButton onClick={openGiftHandler} fill="clear"><IonIcon className='white' slot='icon-only' icon={gift}></IonIcon></IonButton>
+              <IonButton onClick={openNotifHandler} fill="clear"><IonIcon className='white' slot='icon-only' icon={notifications}></IonIcon></IonButton>
       </div>
             </IonCol>
           </IonRow>
