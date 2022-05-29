@@ -21,18 +21,19 @@ const Register: React.FC = () => {
    
 
    async function register() {
-    setBusy(true)
+    
     if (password !== cpassword) {
         await Toast.show({
             text: 'Password does not match',
           });
+        return
     }
     if (username.trim() === '' || password.trim() === ''){
         await Toast.show({
             text: 'Fill the blanks',
           });
     }
-
+    setBusy(true)
     const res = await registerUser (username, password)
     if (res){
         await Toast.show({
