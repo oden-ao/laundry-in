@@ -65,7 +65,7 @@ export async function registerUser(username: string, password: string){
         const docRef = await setDoc(doc(db, user!.uid.toString(), "promos"),{
             freeDelivery: 3,
             tenDiscount: 5,
-            otherDiscount: 1
+            otherDiscount: 0
         });
         console.log("Document written")
       } catch (e) {
