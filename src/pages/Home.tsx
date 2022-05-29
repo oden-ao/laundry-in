@@ -82,6 +82,7 @@ if (user !== null) {
     const docSnap = await getDoc(docRef);
     const username = docSnap.get("username");
     setUsername(username);
+    console.log("Username get");
   }
 
   const getCurrentPosition = async () => {
@@ -100,10 +101,9 @@ if (user !== null) {
 
   useEffect(()=>{
     getCurrentPosition();
-    
     getInfo();
     getRedeem();
-  },[selectedLat, selectedLng]);
+  },[selectedLat, selectedLng, username, redeemed]);
 
   const [openGift, setOpenGift] = useState(false);
 

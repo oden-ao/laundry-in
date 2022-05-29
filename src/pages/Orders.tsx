@@ -34,21 +34,20 @@ const Orders: React.FC = () => {
 
  const userdb = user?.uid;
 
+ async function getData() {
+  const userorders = query(collection(db, userdb!.toString(), "orders", "orders"));
+  const querySnapshot = await getDocs(userorders);
+  console.log('querySnapshot:', querySnapshot);
+  setOrders(querySnapshot.docs.map((doc) =>({...doc.data(), id: doc.id})));
+  // querySnapshot.forEach((doc) => {
+  //   console.log(`${doc.id} => ${doc.data()}`);
+  //   console.log('doc:', doc);
+  // });
+}
 
   useEffect(() => {
-    async function getData() {
-      const userorders = query(collection(db, userdb!.toString(), "orders", "orders"));
-      const querySnapshot = await getDocs(userorders);
-      // console.log('querySnapshot:', querySnapshot);
-      setOrders(querySnapshot.docs.map((doc) =>({...doc.data(), id: doc.id})));
-      
-      // querySnapshot.forEach((doc) => {
-      //   console.log(`${doc.id} => ${doc.data()}`);
-      //   console.log('doc:', doc);
-      // });
-    }
       getData();
-  }, []);
+  }, [laundryCtx.orders]);
 
   return (
     <IonPage>

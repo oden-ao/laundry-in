@@ -156,8 +156,8 @@ if (user !== null) {
     const promoRef = doc(db, user!.uid, "promos")
     const docSnap = await getDoc(promoRef);
     const currPromo = docSnap.get(promo);
-    await updateDoc(promoRef, {
-     coins: currPromo - 1 })
+    const data = {promo: currPromo-1};
+    await updateDoc(promoRef, data);
   }
 
   useEffect(()=>{
@@ -169,7 +169,7 @@ if (user !== null) {
     }
     return () =>{ mounted = false;  
     }
-  }, [])
+  }, [laundryCtx.orders])
 
   const [selectOutlet, setSelectOutlet] = useState(false);
   const [chosenOutlet, setChosenOutlet] = useState<{imageSrc: string,
@@ -231,9 +231,9 @@ const closeOrderHandler = () => {
 
   const placeOrderHandler = () =>{
     laundryCtx.addOrder(laundryCtx.orders.length + 1, "Kilos", formatDate(currDate) ,formatDate(selectedPickupDate), formatDate(selectedDeliveryDate), total, chosenOutlet!.fee, total + chosenOutlet!.fee, (laundryCtx.location.latitude, laundryCtx.location.longitude).toString());
-    setConfirmScreen(false);
-    setToastMessage('Order placed');
-    history.length > 0 ? history.goBack(): history.replace('/navi/home');  
+    // setConfirmScreen(false);
+    // setToastMessage('Order placed');
+    // history.length > 0 ? history.goBack(): history.replace('/navi/home');  
    }
 
    //firebase
@@ -258,6 +258,7 @@ const closeOrderHandler = () => {
            total: total + chosenOutlet!.fee - promoCut,
            address: (String(laundryCtx.location.latitude), String(laundryCtx.location.longitude))
      });
+     placeOrderHandler();
      addCoinHistory(total);
      addCoins(total);
      console.log("Document written with ID: ", docRef.id)

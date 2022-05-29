@@ -152,6 +152,7 @@ const ByOther: React.FC = () => {
     setFreeDelivery(freeDelivery);
     setTenDiscount(tenDiscount);
     setOtherDiscount(otherDiscount);
+    console.log("Set promos");
   }
 
   const chooseFreeDelivery = () =>{
@@ -186,8 +187,8 @@ const ByOther: React.FC = () => {
     const promoRef = doc(db, user!.uid, "promos")
     const docSnap = await getDoc(promoRef);
     const currPromo = docSnap.get(promo);
-    await updateDoc(promoRef, {
-     coins: currPromo - 1 })
+    const data = {promo: currPromo-1};
+    await updateDoc(promoRef, data);
   }
 
   useEffect(()=>{
@@ -200,7 +201,7 @@ const ByOther: React.FC = () => {
     }
     return () =>{ mounted = false;  
     }
-  }, [])
+  }, [otherDiscount, tenDiscount, freeDelivery])
 
   const [selectOutlet, setSelectOutlet] = useState(false);
   const [chosenOutlet, setChosenOutlet] = useState<{imageSrc: string,
@@ -272,9 +273,9 @@ const closeOrderHandler = () => {
 
   const placeOrderHandler = () =>{
     laundryCtx.addOrder(laundryCtx.orders.length + 1, "Other", formatDate(currDate) ,formatDate(selectedPickupDate), formatDate(selectedDeliveryDate), total, chosenOutlet!.fee, total + chosenOutlet!.fee, (laundryCtx.location.latitude, laundryCtx.location.longitude).toString());
-    setConfirmScreen(false);
-    setToastMessage('Order placed');
-    history.length > 0 ? history.goBack(): history.replace('/navi/home');  
+    // setConfirmScreen(false);
+    // setToastMessage('Order placed');
+    // history.length > 0 ? history.goBack(): history.replace('/navi/home');  
     // history.push('/navi/home');
     // history.goBack();
    }
@@ -286,6 +287,9 @@ const closeOrderHandler = () => {
       }
       else if(promoDesc == "10% Discount"){
         promoFree("tenDiscount");
+      }
+      else if(promoDesc == "35% Discount"){
+        promoFree("otherDiscount");
       }
       const querySnapshot = await getDocs(query(collection(db, user!.uid.toString(), "orders", "orders")));
       try{
@@ -301,6 +305,7 @@ const closeOrderHandler = () => {
               total: total + chosenOutlet!.fee,
               address: (String(laundryCtx.location.latitude), String(laundryCtx.location.longitude))
         });
+        placeOrderHandler();
         addCoins(total);
         addCoinHistory(total);
         console.log("Document written with ID: ", docRef.id)
@@ -418,7 +423,7 @@ const closeOrderHandler = () => {
       <IonLabel>
       <b>35% Discount for Other</b><br/>
         Minimum order of 70.000 IDR<br/>
-        Usages left: {otherDiscount}
+        Usages left: {otherDiscount} <br/>
         <i>Order minimum not met!</i>
       </IonLabel>
     </IonItem>}

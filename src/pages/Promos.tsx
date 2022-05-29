@@ -49,7 +49,7 @@ const Promos: React.FC = () => {
 
   useEffect(() => {
     getCoins();
-  }, []);
+  }, [coins, otherDiscount]);
   
 
   async function getCoins() {
@@ -57,6 +57,7 @@ const Promos: React.FC = () => {
     const docRef = doc(db, user!.uid.toString(), "coins");
     const docSnap = await getDoc(docRef);
     const coins = docSnap.get("coins");
+    console.log("Getting coins");
     setCoins(coins);
   }
 
@@ -75,7 +76,7 @@ const Promos: React.FC = () => {
     const docSnap = await getDoc(promoRef);
     const otherPromo = docSnap.get("otherDiscount");
     await updateDoc(promoRef, {
-     coins: otherPromo + 1 })
+     otherDiscount: otherPromo + 1 })
   }
   const [toastMessage, setToastMessage] = useState('');
   const history = useHistory();
@@ -86,7 +87,6 @@ const Promos: React.FC = () => {
     redeemPromo();
     setToastMessage("Promo redeemed");
     setOtherDiscount(false);
-    history.length > 0 ? history.goBack(): history.replace('/navi/home');
     }
   }
 

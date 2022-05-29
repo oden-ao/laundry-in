@@ -173,8 +173,8 @@ const ByUnit: React.FC = () => {
     const promoRef = doc(db, user!.uid, "promos")
     const docSnap = await getDoc(promoRef);
     const currPromo = docSnap.get(promo);
-    await updateDoc(promoRef, {
-     coins: currPromo - 1 })
+    const data = {promo: currPromo-1}
+    await updateDoc(promoRef, data)
   }
 
 
@@ -188,7 +188,7 @@ const ByUnit: React.FC = () => {
     }
     return () =>{ mounted = false;  
     }
-  }, [])
+  }, [laundryCtx.orders])
 
   const [selectOutlet, setSelectOutlet] = useState(false);
   const [chosenOutlet, setChosenOutlet] = useState<{imageSrc: string,
@@ -262,9 +262,9 @@ const closeOrderHandler = () => {
   //context
   const placeOrderHandler = () =>{
     laundryCtx.addOrder(laundryCtx.orders.length + 1, "Unit", formatDate(currDate) ,formatDate(selectedPickupDate), formatDate(selectedDeliveryDate), total, chosenOutlet!.fee, total + chosenOutlet!.fee, (String(laundryCtx.location.latitude), String(laundryCtx.location.longitude)));
-    setConfirmScreen(false);
-    setToastMessage('Order placed');
-    history.length > 0 ? history.goBack(): history.replace('/navi/home');  
+    // setConfirmScreen(false);
+    // setToastMessage('Order placed');
+    // history.length > 0 ? history.goBack(): history.replace('/navi/home');  
     // history.push('/navi/home');
     // history.goBack();
    }
@@ -292,6 +292,7 @@ const closeOrderHandler = () => {
             address: (String(laundryCtx.location.latitude), String(laundryCtx.location.longitude))
       });
       console.log("Document written with ID: ", docRef.id)
+      placeOrderHandler();
       setConfirmScreen(false);
     setToastMessage('Order placed');
     addCoins(total);

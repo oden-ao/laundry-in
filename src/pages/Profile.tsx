@@ -186,6 +186,7 @@ useEffect(() => {
     const docRef = doc(db, userdb!.toString(), "coins");
     const docSnap = await getDoc(docRef);
     const coins = docSnap.get("coins");
+    console.log("Getting coins in profile");
     setCoins(coins);
   }
   async function getInfo() {
@@ -211,7 +212,7 @@ useEffect(() => {
     getCoins();
     getInfo();
     getCoinHistory();
-}, []);
+}, [coins, laundryCtx.orders.length]);
 
 const [privacy, setPrivacy] = useState(false);
 const openPrivacy = () =>{

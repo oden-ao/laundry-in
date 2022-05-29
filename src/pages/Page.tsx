@@ -20,8 +20,6 @@ const Page: React.FC = () => {
 
     return (
         <IonPage>
-           
-            
             <IonContent className="ion-text-center">
            
                 <IonGrid className='onboardingheader'>
