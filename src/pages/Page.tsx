@@ -31,7 +31,8 @@ const Page: React.FC = () => {
         spaceBetween={0}
         slidesPerView={1}
         navigation
-        pagination={{ clickable: true }}
+        pagination={{ clickable: true
+        }}
         onSwiper={(swiper) => console.log(swiper)}
         onSlideChange={() => console.log('slide change')}>
                         <SwiperSlide>
@@ -52,7 +53,7 @@ const Page: React.FC = () => {
                             <div className='overlay1'><b>Guaranteed</b><br/>Safe and reliable We can guarantee that.</div>
                             </IonCard>
                            <IonButton expand='block' routerLink="/login">Get Started</IonButton>
-
+                           <br/><br/>
                             
                             </SwiperSlide>
                         </Swiper>
@@ -64,7 +65,7 @@ const Page: React.FC = () => {
           </IonGrid>
         
        
-            
+    
             </IonContent>
             
         </IonPage>
