@@ -1,5 +1,10 @@
-import * as firebase from 'firebase/app'
+import firebase from 'firebase/compat/app';
+import {collection, addDoc, getDocs, doc, collectionGroup, query, where, getFirestore, setDoc} from "firebase/firestore";
+import {getAuth, onAuthStateChanged, updateProfile} from "firebase/auth";
+import 'firebase/compat/auth';
+import 'firebase/compat/firestore';
 require('firebase/auth')
+
 
 
 const config = {

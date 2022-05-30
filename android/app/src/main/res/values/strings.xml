@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources>
-    <string name="app_name">Memories</string>
-    <string name="title_activity_main">Memories</string>
-    <string name="package_name">com.ode.ionic.memories</string>
-    <string name="custom_url_scheme">com.ode.ionic.memories</string>
+    <string name="app_name">LaundryIn</string>
+    <string name="title_activity_main">LaundryIn</string>
+    <string name="package_name">com.hanova.ionic.laundryin</string>
+    <string name="custom_url_scheme">com.hanova.ionic.laundryin</string>
 </resources>
