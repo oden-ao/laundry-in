@@ -1,4 +1,4 @@
-package com.ode.ionic.memories;
+package com.hanova.ionic.laundryin;
 
 import com.getcapacitor.BridgeActivity;
 

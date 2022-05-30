@@ -5,7 +5,7 @@ import headerregist from '../images/SVG/headerregist.svg'
 import footer from '../images/SVG/footer.svg'
 import './Login.css'
 import {Link} from 'react-router-dom'
-import { registerUser } from '../firebaseconfig'
+import { addUserInfo, registerUser } from '../firebaseconfig'
 import { useHistory } from 'react-router';
 import {Toast} from '@capacitor/toast'
 
@@ -36,6 +36,7 @@ const Register: React.FC = () => {
     setBusy(true)
     const res = await registerUser (username, password)
     if (res){
+        addUserInfo(email, HP);
         await Toast.show({
             text: 'Successfully Registered',
           });
