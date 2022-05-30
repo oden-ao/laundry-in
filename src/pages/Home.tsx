@@ -4,12 +4,13 @@ import { IonButton, IonModal, IonRouterOutlet, IonCard, IonToast, IonList, IonIt
 import { giftOutline, location, notificationsOutline, chevronDownOutline, locationOutline, locationSharp, gift, notifications, close } from 'ionicons/icons';
 import {Geolocation} from '@capacitor/geolocation';
 import {GoogleMap, InfoWindow, LoadScript, Marker} from '@react-google-maps/api';
+import { format, parseISO, getDate, getMonth, getYear, formatISO, add, parse } from 'date-fns';
 
 import firebase from 'firebase/compat/app';
 import 'firebase/compat/auth';
 import 'firebase/compat/firestore';
 import {getAuth, onAuthStateChanged} from "firebase/auth";
-import { getFirestore, doc, getDoc, updateDoc } from "firebase/firestore";
+import { getFirestore, doc, getDoc, updateDoc, getDocs, addDoc, query, collection } from "firebase/firestore";
 
 import { Swiper, SwiperSlide} from 'swiper/react';
 import { Navigation, Pagination, Scrollbar, A11y } from 'swiper';
@@ -114,6 +115,20 @@ if (user !== null) {
   const closeGiftHandler = () =>{
     setOpenGift(false);
   }
+  const currDate = formatISO(new Date())
+  const formatDate = (value: string) => {
+    return format(parseISO(value), 'MMM dd yyyy kk:mm');
+  };
+
+  const addCoinHistory = async () => {
+    const db = getFirestore();
+    const querySnapshot = await getDocs(query(collection(db, user!.uid.toString(), "orders", "orders")));
+    const docRef = await addDoc(collection(db, user!.uid.toString(), "coins", "coinsHistory"),{
+      num: 0,
+      date: formatDate(currDate),
+      coins: 100
+});
+  }
 
   const [toastMessage, setToastMessage] = useState('');
   const redeem = async () => {
@@ -127,6 +142,7 @@ if (user !== null) {
 
   const redeemGiftHandler = () =>{
     setRedeemed(true);
+    addCoinHistory();
     setOpenGift(false);
     updateRedeem();
     redeem();

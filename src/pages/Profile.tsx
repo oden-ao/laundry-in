@@ -6,8 +6,8 @@ import 'firebase/compat/auth';
 import 'firebase/compat/firestore';
 import { useHistory } from 'react-router';
 
-import { IonButton, IonAlert, IonRouterOutlet, IonCard, IonList, IonItem, IonAvatar, IonCardTitle, IonCardHeader, IonLabel, IonRow, IonCol, IonGrid, IonContent, IonButtons, IonFab, IonFabButton, IonHeader, IonIcon, IonPage, IonTitle, IonToolbar, IonBackButton, IonSearchbar, IonChip, IonItemDivider, IonCardContent, IonModal, IonInput, IonFooter } from '@ionic/react';
-import { giftOutline, location, notificationsOutline, chevronDownOutline, lockClosedOutline, createOutline, addOutline, listOutline, informationOutline, helpOutline, informationCircleOutline, helpCircleOutline, documentTextOutline, addCircle, wallet, close } from 'ionicons/icons';
+import { IonButton, IonToast, IonAlert, IonRouterOutlet, IonCard, IonList, IonItem, IonAvatar, IonCardTitle, IonCardHeader, IonLabel, IonRow, IonCol, IonGrid, IonContent, IonButtons, IonFab, IonFabButton, IonHeader, IonIcon, IonPage, IonTitle, IonToolbar, IonBackButton, IonSearchbar, IonChip, IonItemDivider, IonCardContent, IonModal, IonInput, IonFooter } from '@ionic/react';
+import { giftOutline, location, notificationsOutline, chevronDownOutline, lockClosedOutline, createOutline, addOutline, listOutline, informationOutline, helpOutline, informationCircleOutline, helpCircleOutline, documentTextOutline, addCircle, wallet, close, refreshCircle } from 'ionicons/icons';
 import {GoogleMap, InfoWindow, LoadScript, Marker} from '@react-google-maps/api';
 import { useContext, useEffect, useState, useRef } from 'react';
 import {collection, addDoc, query, getDoc, getDocs, doc} from "firebase/firestore";
@@ -179,40 +179,46 @@ const closeCoins = () =>{
   setCoinHistory(false);
 }
 
+async function getCoins() {
+  const db = getFirestore();
+  const docRef = doc(db, userdb!.toString(), "coins");
+  const docSnap = await getDoc(docRef);
+  const coins = docSnap.get("coins");
+  console.log("Getting coins in profile");
+  setCoins(coins);
+}
+async function getInfo() {
+  const db = getFirestore();
+  const docRef = doc(db, userdb!.toString(), "info");
+  const docSnap = await getDoc(docRef);
+  const username = docSnap.get("username");
+  const phoneNum = docSnap.get("phoneNumber");
+  console.log("Profile set");
+  setUsername(username);
+  setPhoneNum(phoneNum);
+}
+async function getCoinHistory() {
+  const coinHistory = query(collection(db, userdb!.toString(), "coins", "coinsHistory"));
+  const querySnapshot = await getDocs(coinHistory);
+  // console.log('querySnapshot:', querySnapshot);
+  setCoinsHistoryList(querySnapshot.docs.map((doc) =>({...doc.data(), id: doc.id})));
+  console.log(coinsHistoryList);
+  // querySnapshot.forEach((doc) => {
+  //   console.log(`${doc.id} => ${doc.data()}`);
+  //   console.log('doc:', doc);
+  // });
+}
+const [toastMessage, setToastMessage] = useState('');
+
+const refreshCoinsHandler = () =>{
+  setToastMessage("Coins refreshed!");
+}
 const userdb = user?.uid;
 useEffect(() => {
-  async function getCoins() {
-    const db = getFirestore();
-    const docRef = doc(db, userdb!.toString(), "coins");
-    const docSnap = await getDoc(docRef);
-    const coins = docSnap.get("coins");
-    console.log("Getting coins in profile");
-    setCoins(coins);
-  }
-  async function getInfo() {
-    const db = getFirestore();
-    const docRef = doc(db, userdb!.toString(), "info");
-    const docSnap = await getDoc(docRef);
-    const username = docSnap.get("username");
-    const phoneNum = docSnap.get("phoneNumber");
-    setUsername(username);
-    setPhoneNum(phoneNum);
-  }
-  async function getCoinHistory() {
-    const coinHistory = query(collection(db, userdb!.toString(), "coins", "coinsHistory"));
-    const querySnapshot = await getDocs(coinHistory);
-    // console.log('querySnapshot:', querySnapshot);
-    setCoinsHistoryList(querySnapshot.docs.map((doc) =>({...doc.data(), id: doc.id})));
-    console.log(coinsHistoryList);
-    // querySnapshot.forEach((doc) => {
-    //   console.log(`${doc.id} => ${doc.data()}`);
-    //   console.log('doc:', doc);
-    // });
-  }
-    getCoins();
     getInfo();
     getCoinHistory();
-}, [coins, laundryCtx.orders.length]);
+    getCoins();
+}, [coins, laundryCtx.orders, username, openCoins, toastMessage]);
 
 const [privacy, setPrivacy] = useState(false);
 const openPrivacy = () =>{
@@ -248,6 +254,7 @@ const closeHelp = () =>{
 }
 
 
+
   return (
     
 
@@ -257,6 +264,11 @@ const closeHelp = () =>{
           <IonTitle>My Profile</IonTitle>
         </IonToolbar>
       </IonHeader>
+
+      <IonToast isOpen={!!toastMessage}
+                    message={toastMessage}
+                    duration={1500}
+                    onDidDismiss={() => {setToastMessage('')}}/>
 
       <IonModal isOpen={privacy}>
       <IonHeader>
@@ -593,7 +605,7 @@ const closeHelp = () =>{
                 {history.date} <br/>
                 <b>Earned {history.coins} coins </b>
                 <br/>
-                {!history.num?"from Gift":
+                {history.num === 0?"from Gift":
                 <div>from Order ID #{history.num}</div>
                 }
                 
@@ -713,7 +725,7 @@ const closeHelp = () =>{
             <IonCardHeader>
               Your Coins
               <div className='coinbtn'>
-            <IonButton className='btncolor' fill='clear'><IonIcon slot="icon-only" icon={addCircle}></IonIcon></IonButton>
+            <IonButton onClick={refreshCoinsHandler} className='btncolor' fill='clear'><IonIcon slot="icon-only" icon={refreshCircle}></IonIcon></IonButton>
             <IonButton onClick={openCoinsHandler} className='btncolor' fill='clear'><IonIcon slot="icon-only" icon={wallet}></IonIcon></IonButton>
             </div>
             </IonCardHeader>

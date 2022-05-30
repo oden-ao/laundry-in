@@ -294,7 +294,7 @@ const addCoinHistory = async (total: number) => {
   const db = getFirestore();
   const querySnapshot = await getDocs(query(collection(db, user!.uid.toString(), "orders", "orders")));
   const docRef = await addDoc(collection(db, user!.uid.toString(), "coins", "coinsHistory"),{
-    num: querySnapshot.size + 1,
+    num: querySnapshot.size,
     date: formatDate(currDate),
     coins: total/1000
 });
